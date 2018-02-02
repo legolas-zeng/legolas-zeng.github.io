@@ -253,6 +253,206 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/29/Django聚合查询/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zenganiu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冻龄大叔">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/29/Django聚合查询/" itemprop="url">Django聚合查询</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-29T00:13:31+08:00">
+                2018-01-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><p>在mysql中，如果遇到这样的表格<code>games</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">game</th>
+<th style="text-align:left">platforms</th>
+<th style="text-align:left">zone</th>
+<th style="text-align:left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">tangm</td>
+<td style="text-align:left">jxdq</td>
+<td style="text-align:left">CW</td>
+<td style="text-align:left">s1</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">tangm</td>
+<td style="text-align:left">jxdq</td>
+<td style="text-align:left">CW</td>
+<td style="text-align:left">s2</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">tangm</td>
+<td style="text-align:left">jxdq</td>
+<td style="text-align:left">CW</td>
+<td style="text-align:left">s3</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">tangm</td>
+<td style="text-align:left">jxdq</td>
+<td style="text-align:left">BT</td>
+<td style="text-align:left">s1</td>
+</tr>
+</tbody>
+</table>
+<p>假如我想查询<code>platforms</code>为<code>jxdq</code>,zone为CW的数据，并把name聚合在一格中。可以很容易写出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select zone,count(1),concat(GROUP_CONCAT(name order by id separator &apos;\&quot;\,\&quot;&apos;)) as &apos;result&apos; from games where game=&apos;tmld&apos; GROUP BY zone;</span><br></pre></td></tr></table></figure></p>
+<p>得到结果：</p>
+<table>
+<thead>
+<tr>
+<th>zone</th>
+<th>count(1)</th>
+<th>result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CW</td>
+<td>3</td>
+<td>“s1”,”s2”,”s3”</td>
+</tr>
+</tbody>
+</table>
+<p>还是比较简单的，但是如果放在django里呢？？只有<code>Q查询（组合操作）</code>和<code>F查询(列操作)</code>做不到的。<br>在这里需要自定义一个<code>聚合函数</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models import Aggregate, CharField</span><br></pre></td></tr></table></figure>
+<p>先从<code>db</code>模块中导入<code>Aggregate</code>和<code>CharField</code>两个方法。看看官方文档是怎么介绍他们的。想看官方文档的<a href="https://docs.djangoproject.com/en/dev/ref/models/querysets/#django.db.models.query.QuerySet.aggregate" target="_blank" rel="noopener">点这里</a>。</p>
+<blockquote>
+<p>aggregate(<em>args, *</em>kwargs)¶</p>
+<p>Returns a dictionary of aggregate values (averages, sums, etc.) calculated over the QuerySet. Each argument to aggregate() specifies a &gt;value that will be included in the dictionary that is returned.<br>The aggregation functions that are provided by Django are described in Aggregation Functions below. Since aggregates are also query<br>expressions, <code>you may combine aggregates with other aggregates or values to create complex aggregates.</code></p>
+</blockquote>
+<p>简单翻译过来就是说，aggregate会返回汇总值的字典，通过QuerySet进行计算。 aggregate() 的每个参数指定返回的字典中将要包含的值。特别是可以组合多个聚合以及值来创建复杂的聚合。呐，这就是思路。<br>官网的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from django.db.models import Count</span><br><span class="line">&gt;&gt;&gt; q = Blog.objects.aggregate(number_of_entries=Count(&apos;entry&apos;))</span><br><span class="line">&#123;&apos;number_of_entries&apos;: 16&#125;</span><br></pre></td></tr></table></figure></p>
+<p>求和作者的Blog数目，是不是有点像mysql语句中的<code>count</code>之后的  <code>AS</code>啊？反正我感觉就是一模一样。<br>用在这个问题上：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [8]: server.objects.filter(platform=&apos;jxdq&apos;).filter(zone=&apos;CW&apos;).aggregate(result=Count(&apos;zone&apos;))</span><br><span class="line">Out[8]: &#123;&apos;result&apos;: 3&#125;</span><br></pre></td></tr></table></figure></p>
+<p>额，只是求和，跟我们需求的相差太大，<br>在<code>Stack Overflow</code>中有个<a href="https://stackoverflow.com/questions/10340684/group-concat-equivalent-in-django/40478702#40478702" target="_blank" rel="noopener">类似的问题</a>可以查考下。</p>
+<p>现在需要django聚合类中的<code>annotate</code>方法。可以为每一个查询对象生成独立的汇总。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In [28]: games.objects.filter(platform=&apos;jxdq&apos;).values(&apos;platform&apos;,&apos;zone&apos;).an</span><br><span class="line">    ...: notate(count=Count(0)).order_by(&apos;zone&apos;)</span><br><span class="line">Out[28]: &lt;QuerySet [&#123;&apos;count&apos;: 1, &apos;platform&apos;: u&apos;jxdq&apos;, &apos;zone&apos;: u&apos;BT&apos;&#125;, &#123;&apos;count</span><br><span class="line">    &apos;: 3, &apos;platform&apos;: u&apos;jxdq&apos;, &apos;zone&apos;: u&apos;CW&apos;&#125;]&gt;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，<code>annotate</code>可以把目标对象汇总，QuerySet中的每个对象都会被注上特定的值。<br>到这一步可以获取到聚合数值，但是还不能拿到具体聚合了哪些数值。<br>根据<code>stack overflow</code>的提示，定义一个函数。<code>相关参考文档放在最后。</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models import Aggregate, CharField</span><br><span class="line"></span><br><span class="line">class GroupConcat(Aggregate):          # Aggregate的子类</span><br><span class="line">    # supports COUNT(distinct field)</span><br><span class="line">    function = &apos;GROUP_CONCAT&apos;</span><br><span class="line">    template = &apos;%(function)s(%(distinct)s%(expressions)s)&apos;</span><br><span class="line">    def __init__(self, expression, distinct=False,ordering=None,separator=&apos;,&apos;, **extra):</span><br><span class="line">        super(GroupConcat, self).__init__(</span><br><span class="line">            expression,</span><br><span class="line">            distinct=&apos;DISTINCT &apos; if distinct else &apos;&apos;,</span><br><span class="line">            ordering=&apos; ORDER BY %s&apos; %ordering if ordering is not None else &apos;&apos;,</span><br><span class="line">            separator=&apos; SEPARATOR &quot;%s&quot;&apos; % separator,</span><br><span class="line">            output_field=CharField(),</span><br><span class="line">            **extra)</span><br></pre></td></tr></table></figure></p>
+<p>将被聚合的列值传入<code>GroupConcat</code>,就可以，<code>separator</code>默认分隔符是<code>,</code>号。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GroupConcat(&apos;name&apos;,separator=&apos;,&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>放入整个查询语句中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">games.objects.filter(platform=&apos;jxdq&apos;).values(&apos;platform&apos;,&apos;zone&apos;).annotate(count=Count(0),name=GroupConcat(&apos;name&apos;,separator=&apos;,&apos;)).order_by(&apos;zone&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>输入结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In [7]: games.objects.filter(platform=&apos;jxdq&apos;).values(&apos;platform&apos;,&apos;zone&apos;).annotat</span><br><span class="line">   ...: e(count=Count(0),name=GroupConcat(&apos;name&apos;,separator=&apos;,&apos;)).order_by(&apos;zone</span><br><span class="line">   ...: &apos;)</span><br><span class="line">Out[7]: &lt;QuerySet [&#123;&apos;count&apos;: 1, &apos;platform&apos;: u&apos;jxdq&apos;, &apos;name&apos;: u&apos;s1&apos;&#125;,&#123;&apos;count&apos;: 3, &apos;platform&apos;: u&apos;jxdq&apos;, &apos;name&apos;: u&apos;s1&apos;,&apos;s2&apos;,&apos;s3&apos;&#125;]</span><br></pre></td></tr></table></figure></p>
+<p>复杂查询语句不熟的话最好就分段去凑…..个人建议。</p>
+<h3 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h3><p><a href="https://code.ziqiangxuetang.com/django/django-queryset-advance.html" target="_blank" rel="noopener">https://code.ziqiangxuetang.com/django/django-queryset-advance.html</a><br><a href="http://usyiyi.cn/documents/Django_111/topics/db/aggregation.html" target="_blank" rel="noopener">http://usyiyi.cn/documents/Django_111/topics/db/aggregation.html</a><br><a href="http://usyiyi.cn/translate/Django_111/ref/models/querysets.html#django.db.models.query.QuerySet.aggregate" target="_blank" rel="noopener">http://usyiyi.cn/translate/Django_111/ref/models/querysets.html#django.db.models.query.QuerySet.aggregate</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/用docker搭建mysql主从备份/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -537,138 +737,6 @@
 <h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>到这一步算是安装完毕，现在开始修改配置文件。在<code>/etc/</code>目录下创建<code>ansible</code>目录，创建ansible.cfg文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible ᐅ vim ansible.cfg</span><br><span class="line">[defaults]</span><br><span class="line">hostfile=/etc/ansible/hosts</span><br><span class="line">private_key_file = /root/.ssh/id_rsa</span><br><span class="line">remote_user = root</span><br><span class="line">remote_port = 22</span><br><span class="line">host_key_checking = False</span><br></pre></td></tr></table></figure></p>
 <p>创建hosts文件，用于存储客户端ip和分组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible ᐅ vim hosts</span><br><span class="line">172.17.0.3</span><br></pre></td></tr></table></figure></p>
 <p>修改好后，就可以测试ansible了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ansible]# ansible &apos;172.17.0.3&apos; -m ping</span><br><span class="line">172.17.0.3 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;changed&quot;: false,</span><br><span class="line">    &quot;ping&quot;: &quot;pong&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/18/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zenganiu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="冻龄大叔">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/18/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-18T00:02:54+08:00">
-                2018-01-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
           
         
