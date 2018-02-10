@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="运维," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,19 @@
 
 
 
-<meta name="description" content="版本工具  Centos7  Ansible2.4.2  Python2.7  docker  主机分配 server: 192.168.203.129client: 172.17.0.3（docker虚拟镜像，centos6.9版本）  Ansible安装基础件安装：   pip install setuptools PyYAML Jinja2 paramiko simplejson   ans">
-<meta name="keywords" content="运维">
+<meta name="description" content="supervisor是python写的linux进程管理工具，安装使用简单 安装配置本次配置使用的工具如下：  centos7 python2.7(系统自带) mysql5.7 redis4 supervisor  安装过程很简单，先安装python-setuptools工具，再安装工具里面的supervisor12pip install python-setuptoolseasy_install">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ansible踩坑札记">
-<meta property="og:url" content="http://yoursite.com/2018/01/18/ansible踩坑札记/index.html">
+<meta property="og:title" content="supervisor进程管理">
+<meta property="og:url" content="http://yoursite.com/2018/02/10/supervisor进程管理/index.html">
 <meta property="og:site_name" content="冻龄大叔">
-<meta property="og:description" content="版本工具  Centos7  Ansible2.4.2  Python2.7  docker  主机分配 server: 192.168.203.129client: 172.17.0.3（docker虚拟镜像，centos6.9版本）  Ansible安装基础件安装：   pip install setuptools PyYAML Jinja2 paramiko simplejson   ans">
+<meta property="og:description" content="supervisor是python写的linux进程管理工具，安装使用简单 安装配置本次配置使用的工具如下：  centos7 python2.7(系统自带) mysql5.7 redis4 supervisor  安装过程很简单，先安装python-setuptools工具，再安装工具里面的supervisor12pip install python-setuptoolseasy_install">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-28T07:51:01.054Z">
+<meta property="og:image" content="http://yoursite.com/images/supervisor.png">
+<meta property="og:updated_time" content="2018-02-10T07:57:08.402Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ansible踩坑札记">
-<meta name="twitter:description" content="版本工具  Centos7  Ansible2.4.2  Python2.7  docker  主机分配 server: 192.168.203.129client: 172.17.0.3（docker虚拟镜像，centos6.9版本）  Ansible安装基础件安装：   pip install setuptools PyYAML Jinja2 paramiko simplejson   ans">
+<meta name="twitter:title" content="supervisor进程管理">
+<meta name="twitter:description" content="supervisor是python写的linux进程管理工具，安装使用简单 安装配置本次配置使用的工具如下：  centos7 python2.7(系统自带) mysql5.7 redis4 supervisor  安装过程很简单，先安装python-setuptools工具，再安装工具里面的supervisor12pip install python-setuptoolseasy_install">
+<meta name="twitter:image" content="http://yoursite.com/images/supervisor.png">
 
 
 
@@ -120,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/01/18/ansible踩坑札记/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/02/10/supervisor进程管理/"/>
 
 
 
 
 
-  <title>ansible踩坑札记 | 冻龄大叔</title>
+  <title>supervisor进程管理 | 冻龄大叔</title>
   
 
 
@@ -254,7 +255,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/18/ansible踩坑札记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/supervisor进程管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zenganiu">
@@ -271,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ansible踩坑札记</h1>
+          <h1 class="post-title" itemprop="name headline">supervisor进程管理</h1>
         
 
         <div class="post-meta">
@@ -283,8 +284,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-18T23:26:15+08:00">
-                2018-01-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T15:52:21+08:00">
+                2018-02-10
               </time>
             
 
@@ -321,56 +322,33 @@
       
 
       
-        <h3 id="版本工具"><a href="#版本工具" class="headerlink" title="版本工具"></a>版本工具</h3><ul>
-<li style="list-style: none"><input type="checkbox" checked> Centos7</li>
-<li style="list-style: none"><input type="checkbox" checked> Ansible2.4.2</li>
-<li style="list-style: none"><input type="checkbox" checked> Python2.7</li>
-<li style="list-style: none"><input type="checkbox" checked> docker</li>
-</ul>
-<h3 id="主机分配"><a href="#主机分配" class="headerlink" title="主机分配"></a>主机分配</h3><blockquote>
-<p>server: 192.168.203.129<br>client: 172.17.0.3（docker虚拟镜像，centos6.9版本）</p>
-</blockquote>
-<h3 id="Ansible安装"><a href="#Ansible安装" class="headerlink" title="Ansible安装"></a>Ansible安装</h3><p>基础件安装：</p>
+        <p>supervisor是python写的linux进程管理工具，安装使用简单</p>
+<h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><p>本次配置使用的工具如下：</p>
 <blockquote>
-<ul>
-<li>pip install setuptools PyYAML Jinja2 paramiko simplejson</li>
-</ul>
+<p>centos7</p>
+<p>python2.7(系统自带)</p>
+<p>mysql5.7</p>
+<p>redis4</p>
+<p>supervisor</p>
 </blockquote>
-<p>ansible安装：</p>
-<blockquote>
+<p>安装过程很简单，先安装<code>python-setuptools</code>工具，再安装工具里面的<code>supervisor</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install python-setuptools</span><br><span class="line">easy_install supervisor</span><br></pre></td></tr></table></figure></p>
+<p>安装完成后，新建一个<code>supervisor</code>文件夹，再生成配置文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/supervisor</span><br><span class="line">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p><code>supervisor</code>共有三个命令：</p>
 <ul>
-<li>pip install ansible</li>
+<li style="list-style: none"><input type="checkbox" checked> supervisord</li>
+<li style="list-style: none"><input type="checkbox" checked> supervisorctl</li>
+<li style="list-style: none"><input type="checkbox" checked> echo_supervisord_conf</li>
 </ul>
-</blockquote>
-<p>安装好之后，查看下ansible的版本。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# ansible --version</span><br><span class="line">ansible 2.4.2.0</span><br><span class="line">  config file = None</span><br><span class="line">  configured module search path = [u&apos;/root/.ansible/plugins/modules&apos;, u&apos;/usr/share/ansible/plugins/modules&apos;]</span><br><span class="line">  ansible python module location = /usr/lib/python2.7/site-packages/ansible</span><br><span class="line">  executable location = /usr/bin/ansible</span><br><span class="line">  python version = 2.7.5 (default, Nov 20 2015, 02:00:19) [GCC 4.8.5 20150623 (Red Hat 4.8.5-4)]</span><br></pre></td></tr></table></figure></p>
-<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>ansible是需要ssh登录客户端,服务端和客户端都需要安装ssh,别忘记要启动</p>
-<blockquote>
-<ul>
-<li>yum -y install openssh-server openssh-clients</li>
-<li>/etc/init.d/sshd start</li>
-</ul>
-</blockquote>
-<p>在<code>master</code>上生成秘钥</p>
-<blockquote>
-<ul>
-<li>ssh-keygen</li>
-</ul>
-</blockquote>
-<p>然后一路回车，在<code>/root/.ssh</code>处查看密钥，修改<code>client</code>的root密码，然后将生产的密钥<code>ssh-copy-id</code>到<code>client</code>。</p>
-<blockquote>
-<ul>
-<li>ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.17.0.3</li>
-</ul>
-</blockquote>
-<p>提示输入<code>client</code>的root密码，成功后可以测试登录</p>
-<blockquote>
-<ul>
-<li>ssh root@172.17.0.3</li>
-</ul>
-</blockquote>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>到这一步算是安装完毕，现在开始修改配置文件。在<code>/etc/</code>目录下创建<code>ansible</code>目录，创建ansible.cfg文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible ᐅ vim ansible.cfg</span><br><span class="line">[defaults]</span><br><span class="line">hostfile=/etc/ansible/hosts</span><br><span class="line">private_key_file = /root/.ssh/id_rsa</span><br><span class="line">remote_user = root</span><br><span class="line">remote_port = 22</span><br><span class="line">host_key_checking = False</span><br></pre></td></tr></table></figure></p>
-<p>创建hosts文件，用于存储客户端ip和分组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible ᐅ vim hosts</span><br><span class="line">172.17.0.3</span><br></pre></td></tr></table></figure></p>
-<p>修改好后，就可以测试ansible了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ansible]# ansible &apos;172.17.0.3&apos; -m ping</span><br><span class="line">172.17.0.3 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;changed&quot;: false,</span><br><span class="line">    &quot;ping&quot;: &quot;pong&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>启动命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>启动前，先配置先配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]         </span><br><span class="line">port=0.0.0.0:9001       #设置允许任何ip登录后台   </span><br><span class="line">username=user           #设置默认账户   </span><br><span class="line">password=123</span><br></pre></td></tr></table></figure>
+<p>这里<code>port</code>默认是<code>127.0.0.1:9001</code>，把它改为<code>0.0.0.0:9001</code>。然后设置监控<code>redis</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[program:redis]</span><br><span class="line">autorestart=true</span><br><span class="line">autostart=true</span><br><span class="line">directory=/etc/redis</span><br><span class="line">command=/usr/bin/redis-server /etc/redis/6379_master.conf</span><br></pre></td></tr></table></figure>
+<p>非常的简单明了，我就不多解释了，唯一要讲的是redis安装的时候，他的配置文件一定要把<code>daemonize</code>设置成<code>no</code>,这样redis就不会进入守护进程模式，通过连接就能执行关闭redis，不然…..你只能启动redis而不能关闭它，并且它的状态会变成异常的<code>fatal</code>或者<code>BACKOFF</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[program:mysql]</span><br><span class="line">autorestart=true</span><br><span class="line">autostart=true</span><br><span class="line">directory=/usr/local/mysql</span><br><span class="line">command=/usr/bin/pidproxy /data/mysqldata/localhost.pid /usr/local/mysql/bin/mysqld_safe</span><br></pre></td></tr></table></figure>
+<p><code>mysql</code>的配置就不一样。根据<a href="http://www.supervisord.org/subprocess.html" target="_blank" rel="noopener">官网</a>的提示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[program:mysql]</span><br><span class="line">command=/path/to/pidproxy /path/to/pidfile /path/to/mysqld_safe</span><br></pre></td></tr></table></figure></p>
+<p>需要找到这<code>pidproxy</code>，<code>pidfile</code>，<code>mysqld_safe</code>,然后…然后就能召唤神龙了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#pidproxy</span><br><span class="line"></span><br><span class="line">~ ᐅ whereis pidproxy </span><br><span class="line">pidproxy: /usr/bin/pidproxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#pidfile</span><br><span class="line"></span><br><span class="line">mysql root@localhost:(none)&gt; show variables like &apos;pid_file&apos;\G;</span><br><span class="line">***************************[ 1. row ]***************************</span><br><span class="line">Variable_name | pid_file</span><br><span class="line">Value         | /data/mysqldata/localhost.pid</span><br><span class="line"></span><br><span class="line"># mysqld_safe</span><br><span class="line"></span><br><span class="line">~ ᐅ find / -name mysqld_safe</span><br><span class="line">/usr/local/mysql/bin/mysqld_safe</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/supervisor.png" alt="“图片描述”"><br>大概就这些，supervisor管理进程比较方便。局限性也多，有些想法或许可以实现，比如搭进程管理集群，配合django使用等等。</p>
 
       
     </div>
@@ -397,12 +375,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/运维/" rel="tag"># 运维</a>
-          
-        </div>
-      
 
       
       
@@ -412,15 +384,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/01/29/Django聚合查询/" rel="next" title="Django聚合查询">
+                <i class="fa fa-chevron-left"></i> Django聚合查询
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/01/24/用docker搭建mysql主从备份/" rel="prev" title="用docker-compose搭建mysql主从备份">
-                用docker-compose搭建mysql主从备份 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -613,7 +585,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#版本工具"><span class="nav-number">1.</span> <span class="nav-text">版本工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主机分配"><span class="nav-number">2.</span> <span class="nav-text">主机分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ansible安装"><span class="nav-number">3.</span> <span class="nav-text">Ansible安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-number">4.</span> <span class="nav-text">ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">5.</span> <span class="nav-text">修改配置文件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装配置"><span class="nav-number">1.</span> <span class="nav-text">安装配置</span></a></li></ol></div>
             
 
           </div>
