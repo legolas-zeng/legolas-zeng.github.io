@@ -28,6 +28,12 @@
 <p>完整代码点<a href="https://github.com/legolas-zeng/scripts/blob/master/tornado/two.py" target="_blank" rel="noopener">这里</a>,顺手点个star吧≖‿≖✧</p>
 ]]></content>
       
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
         
         <tags>
             
@@ -54,6 +60,12 @@
 <p>熟悉的hello，world……</p>
 ]]></content>
       
+        <categories>
+            
+            <category> web后端 </category>
+            
+        </categories>
+        
         
         <tags>
             
@@ -93,6 +105,12 @@
 <p><code>D-Bus</code>:一种本地进程间通信机制</p>
 ]]></content>
       
+        <categories>
+            
+            <category> 容器 </category>
+            
+        </categories>
+        
         
         <tags>
             
@@ -140,6 +158,12 @@
 <p><code>ansible2.0 playbook api运维应用</code><a href="https://segmentfault.com/a/1190000008009639" target="_blank" rel="noopener">https://segmentfault.com/a/1190000008009639</a></p>
 ]]></content>
       
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
         
         <tags>
             
@@ -170,6 +194,12 @@
 <p><code>官网文档</code>：<a href="http://supervisord.org/api.html" target="_blank" rel="noopener">http://supervisord.org/api.html</a></p>
 ]]></content>
       
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
         
         <tags>
             
@@ -211,12 +241,18 @@
 <p><img src="/images/supervisor.png" alt="“图片描述”"><br>大概就这些，supervisor管理进程比较方便。局限性也多，有些想法或许可以实现，比如搭进程管理集群，配合django使用等等。</p>
 ]]></content>
       
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
         
         <tags>
             
-            <tag> 运维 </tag>
-            
             <tag> supervisor </tag>
+            
+            <tag> 运维 </tag>
             
         </tags>
         
@@ -304,6 +340,12 @@
 <h3 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h3><p><a href="https://code.ziqiangxuetang.com/django/django-queryset-advance.html" target="_blank" rel="noopener">https://code.ziqiangxuetang.com/django/django-queryset-advance.html</a><br><a href="http://usyiyi.cn/documents/Django_111/topics/db/aggregation.html" target="_blank" rel="noopener">http://usyiyi.cn/documents/Django_111/topics/db/aggregation.html</a><br><a href="http://usyiyi.cn/translate/Django_111/ref/models/querysets.html#django.db.models.query.QuerySet.aggregate" target="_blank" rel="noopener">http://usyiyi.cn/translate/Django_111/ref/models/querysets.html#django.db.models.query.QuerySet.aggregate</a></p>
 ]]></content>
       
+        <categories>
+            
+            <category> web后端 </category>
+            
+        </categories>
+        
         
         <tags>
             
@@ -358,6 +400,12 @@
 <p><img src="/images/用docker-compose搭建mysql主从备份-3.png" alt="“图片描述”"><br>上<code>slave</code>上面看看：<br><img src="/images/用docker-compose搭建mysql主从备份-4.png" alt="“图片描述”"><br>大功告成……睡觉。</p>
 ]]></content>
       
+        <categories>
+            
+            <category> 容器 </category>
+            
+        </categories>
+        
         
         <tags>
             
