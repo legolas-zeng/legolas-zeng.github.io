@@ -29,6 +29,14 @@
 ]]></content>
       
         
+        <tags>
+            
+            <tag> 运维 </tag>
+            
+            <tag> tornado </tag>
+            
+        </tags>
+        
     </entry>
     
     <entry>
@@ -46,6 +54,14 @@
 <p>熟悉的hello，world……</p>
 ]]></content>
       
+        
+        <tags>
+            
+            <tag> ansible </tag>
+            
+            <tag> nginx </tag>
+            
+        </tags>
         
     </entry>
     
@@ -77,6 +93,12 @@
 <p><code>D-Bus</code>:一种本地进程间通信机制</p>
 ]]></content>
       
+        
+        <tags>
+            
+            <tag> docker </tag>
+            
+        </tags>
         
     </entry>
     
@@ -119,6 +141,12 @@
 ]]></content>
       
         
+        <tags>
+            
+            <tag> ansible </tag>
+            
+        </tags>
+        
     </entry>
     
     <entry>
@@ -142,6 +170,12 @@
 <p><code>官网文档</code>：<a href="http://supervisord.org/api.html" target="_blank" rel="noopener">http://supervisord.org/api.html</a></p>
 ]]></content>
       
+        
+        <tags>
+            
+            <tag> supervisor </tag>
+            
+        </tags>
         
     </entry>
     
@@ -177,6 +211,14 @@
 <p><img src="/images/supervisor.png" alt="“图片描述”"><br>大概就这些，supervisor管理进程比较方便。局限性也多，有些想法或许可以实现，比如搭进程管理集群，配合django使用等等。</p>
 ]]></content>
       
+        
+        <tags>
+            
+            <tag> 运维 </tag>
+            
+            <tag> supervisor </tag>
+            
+        </tags>
         
     </entry>
     
@@ -321,6 +363,8 @@
             
             <tag> docker </tag>
             
+            <tag> mysql </tag>
+            
         </tags>
         
     </entry>
@@ -382,6 +426,8 @@
       
         
         <tags>
+            
+            <tag> ansible </tag>
             
             <tag> 运维 </tag>
             
