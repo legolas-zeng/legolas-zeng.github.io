@@ -3,6 +3,35 @@
   
     
     <entry>
+      <title><![CDATA[itchat+tornado微信报警]]></title>
+      <url>/2018/03/13/itchat-tornado%E5%BE%AE%E4%BF%A1%E6%8A%A5%E8%AD%A6/</url>
+      <content type="html"><![CDATA[<p>公司现在用着zabbix+tornado+微信企业号实现实时报警功能，但是我嫌麻烦，不想多安装个微信企业号。于是就想通过itchat来转发报警信息。<br>大概结构如下图：</p>
+<p><img src="/images/itchat+tornado微信报警.png" alt="image"></p>
+<h4 id="版本工具"><a href="#版本工具" class="headerlink" title="版本工具"></a>版本工具</h4><ul>
+<li style="list-style: none"><input type="checkbox" checked> tornado</li>
+<li style="list-style: none"><input type="checkbox" checked> itchat</li>
+<li style="list-style: none"><input type="checkbox" checked> python2.7</li>
+</ul>
+<h4 id="itchat"><a href="#itchat" class="headerlink" title="itchat"></a>itchat</h4><p>看看<a href="https://itchat.readthedocs.io/zh/latest/" target="_blank" rel="noopener">官网介绍</a>,完成发送告警信息功能的话，需要：</p>
+<blockquote>
+<p>查找到指定的微信用户</p>
+<p>查找到指定的微信群组</p>
+<p>send 信息</p>
+</blockquote>
+<p>所以，微信脚本可以这样写：</p>
+<h5 id="查找微信用户"><a href="#查找微信用户" class="headerlink" title="查找微信用户"></a>查找微信用户</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def get_UserName(NickName):</span><br><span class="line">    info = itchat.search_friends(nickName=NickName)</span><br><span class="line">    fname = info[0][&apos;UserName&apos;]</span><br><span class="line">    return fname</span><br></pre></td></tr></table></figure>
+<p>只需要传<code>微信昵称</code>即可以查找到指定用户。</p>
+<h5 id="查找微信群组"><a href="#查找微信群组" class="headerlink" title="查找微信群组"></a>查找微信群组</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def get_Group(groupname):</span><br><span class="line">    group = itchat.search_chatrooms(name=groupname)</span><br><span class="line">    if group is not None:</span><br><span class="line">        group_name = group[0][&apos;UserName&apos;]</span><br><span class="line">        return group_name</span><br></pre></td></tr></table></figure>
+<p>同样只需要传入微信群组的群名即可。</p>
+<h5 id="发送信息"><a href="#发送信息" class="headerlink" title="发送信息"></a>发送信息</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def send_msg(fname,msg):</span><br><span class="line">    b = itchat.send(msg, toUserName=fname)</span><br><span class="line">    req = b.get(&apos;BaseResponse&apos;).get(&apos;Ret&apos;)</span><br><span class="line">    if req == 0 :</span><br><span class="line">        print u&apos;消息发送成功&apos;</span><br></pre></td></tr></table></figure>
+<p>传入两个参数，一个是发送对象<code>fname</code>，可以是用户也可以是群组。另一个参数是<code>msg</code>需要发送的报警信息。</p>
+<p>完整代码点<a href="https://github.com/legolas-zeng/scripts/blob/master/tornado/two.py" target="_blank" rel="noopener">这里</a>,顺手点个star吧≖‿≖✧</p>
+]]></content>
+      
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[单机版的tornado+nginx反向代理]]></title>
       <url>/2018/03/08/%E5%8D%95%E6%9C%BA%E7%89%88%E7%9A%84tornado-nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</url>
       <content type="html"><![CDATA[<p>国际惯例，先上一个tornado最简单的<code>hello，world</code></p>
