@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="ansible,nginx," />
+  <meta name="keywords" content="rsync," />
 
 
 
@@ -79,21 +79,18 @@
 
 
 
-<meta name="description" content="国际惯例，先上一个tornado最简单的hello，world 1234567891011121314151617# -*-coding:utf-8 -*-import tornadofrom tornado import ioloop # 核心的I/O循环from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重">
-<meta name="keywords" content="ansible,nginx">
+<meta name="description" content="rsync用于服务器间同步文件，常用于实时同步。先看看这个词怎么读吧，我就听过好几种读音的，标准发音：（锐森） 实验用服务器  源主机 192.168.28.130  目标主机 172.19.0.2  目标主机要从源主机上同步文件。 rsync安装和命令1yum install -y rsync 启动命令：1rsync --daemon 源主机配置配置文件有3个：   rsyncd.conf  r">
+<meta name="keywords" content="rsync">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单机版的tornado+nginx反向代理">
-<meta property="og:url" content="http://yoursite.com/2018/03/08/单机版的tornado-nginx反向代理/index.html">
+<meta property="og:title" content="rsync配置（备忘）">
+<meta property="og:url" content="http://yoursite.com/2018/03/25/rsync配置（备忘）/index.html">
 <meta property="og:site_name" content="冻龄大叔">
-<meta property="og:description" content="国际惯例，先上一个tornado最简单的hello，world 1234567891011121314151617# -*-coding:utf-8 -*-import tornadofrom tornado import ioloop # 核心的I/O循环from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重">
+<meta property="og:description" content="rsync用于服务器间同步文件，常用于实时同步。先看看这个词怎么读吧，我就听过好几种读音的，标准发音：（锐森） 实验用服务器  源主机 192.168.28.130  目标主机 172.19.0.2  目标主机要从源主机上同步文件。 rsync安装和命令1yum install -y rsync 启动命令：1rsync --daemon 源主机配置配置文件有3个：   rsyncd.conf  r">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/单机版的tornado-nginx反向代理1.png">
-<meta property="og:image" content="http://yoursite.com/images/单机版的tornado-nginx反向代理2.png">
-<meta property="og:updated_time" content="2018-03-13T15:58:32.228Z">
+<meta property="og:updated_time" content="2018-03-25T05:31:12.378Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="单机版的tornado+nginx反向代理">
-<meta name="twitter:description" content="国际惯例，先上一个tornado最简单的hello，world 1234567891011121314151617# -*-coding:utf-8 -*-import tornadofrom tornado import ioloop # 核心的I/O循环from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重">
-<meta name="twitter:image" content="http://yoursite.com/images/单机版的tornado-nginx反向代理1.png">
+<meta name="twitter:title" content="rsync配置（备忘）">
+<meta name="twitter:description" content="rsync用于服务器间同步文件，常用于实时同步。先看看这个词怎么读吧，我就听过好几种读音的，标准发音：（锐森） 实验用服务器  源主机 192.168.28.130  目标主机 172.19.0.2  目标主机要从源主机上同步文件。 rsync安装和命令1yum install -y rsync 启动命令：1rsync --daemon 源主机配置配置文件有3个：   rsyncd.conf  r">
 
 
 
@@ -123,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/08/单机版的tornado-nginx反向代理/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/25/rsync配置（备忘）/"/>
 
 
 
 
 
-  <title>单机版的tornado+nginx反向代理 | 冻龄大叔</title>
+  <title>rsync配置（备忘） | 冻龄大叔</title>
   
 
 
@@ -267,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/08/单机版的tornado-nginx反向代理/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/25/rsync配置（备忘）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zenganiu">
@@ -284,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">单机版的tornado+nginx反向代理</h1>
+          <h1 class="post-title" itemprop="name headline">rsync配置（备忘）</h1>
         
 
         <div class="post-meta">
@@ -296,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T23:09:40+08:00">
-                2018-03-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-25T13:28:46+08:00">
+                2018-03-25
               </time>
             
 
@@ -319,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web后端/" itemprop="url" rel="index">
-                    <span itemprop="name">web后端</span>
+                  <a href="/categories/运维工具/" itemprop="url" rel="index">
+                    <span itemprop="name">运维工具</span>
                   </a>
                 </span>
 
@@ -356,16 +353,29 @@
       
 
       
-        <p>国际惯例，先上一个tornado最简单的<code>hello，world</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># -*-coding:utf-8 -*-</span><br><span class="line">import tornado</span><br><span class="line">from tornado import ioloop # 核心的I/O循环</span><br><span class="line">from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重要的类</span><br><span class="line">from tornado.options import define, options</span><br><span class="line">define(&quot;port&quot;, default=8000, type=int)</span><br><span class="line"></span><br><span class="line">class IndexHandler(web.RequestHandler):</span><br><span class="line">    def get(self):</span><br><span class="line">        self.write(&apos;hello ,world&apos;)</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    tornado.options.parse_command_line()</span><br><span class="line">    app = tornado.web.Application(handlers=[(r&quot;/&quot;, IndexHandler)])</span><br><span class="line">    http_server = tornado.httpserver.HTTPServer(app)</span><br><span class="line">    http_server.listen(options.port)</span><br><span class="line">    tornado.ioloop.IOLoop.instance().start()</span><br></pre></td></tr></table></figure>
-<p>浏览器输入<code>ip：8000</code>就可以看到，说明tornado运行正常。</p>
-<p><img src="/images/单机版的tornado-nginx反向代理1.png" alt="image"></p>
-<p>如果我想有<code>http://zengabcdo.com/</code>访问<code>tornado</code>,就要用到反向代理。<br>现在<code>hosts</code>文件添加解析记录（win端修改<code>C:\Windows\System32\drivers\etc</code>的hosts），添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.28.130 zengabcdo.com</span><br></pre></td></tr></table></figure></p>
-<p>在nginx.conf上添加server模块：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80; # nginx监听端口</span><br><span class="line">        server_name  zengabcdo.com; # 虚拟主机名</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://192.168.28.130:8000; # 代理转发的地址</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后重新载入配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure></p>
-<p>浏览器输入：<a href="http://zengabcdo.com/" target="_blank" rel="noopener">http://zengabcdo.com/</a></p>
-<p><img src="/images/单机版的tornado-nginx反向代理2.png" alt="image"></p>
-<p>熟悉的hello，world……</p>
+        <p><code>rsync</code>用于服务器间同步文件，常用于实时同步。先看看这个词怎么读吧，我就听过好几种读音的，标准<code>发音：（锐森）</code></p>
+<h5 id="实验用服务器"><a href="#实验用服务器" class="headerlink" title="实验用服务器"></a>实验用服务器</h5><ul>
+<li style="list-style: none"><input type="checkbox" checked> 源主机 192.168.28.130</li>
+<li style="list-style: none"><input type="checkbox" checked> 目标主机 172.19.0.2</li>
+</ul>
+<p>目标主机要从源主机上同步文件。</p>
+<h5 id="rsync安装和命令"><a href="#rsync安装和命令" class="headerlink" title="rsync安装和命令"></a>rsync安装和命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y rsync</span><br></pre></td></tr></table></figure>
+<p>启动命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync --daemon</span><br></pre></td></tr></table></figure></p>
+<h5 id="源主机配置"><a href="#源主机配置" class="headerlink" title="源主机配置"></a>源主机配置</h5><p>配置文件有3个：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> rsyncd.conf</li>
+<li style="list-style: none"><input type="checkbox" checked> rsyncd.secrets</li>
+<li style="list-style: none"><input type="checkbox" checked> rsync_manager_passwd.txt</li>
+</ul>
+<p><code>rsync_manager_passwd.txt</code>是密码文件，<code>rsyncd.conf</code>是配置文件，<code>rsyncd.secrets</code>是密码文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/etc ᐅ vim rsyncd.conf</span><br><span class="line">uid = root</span><br><span class="line">gid = root</span><br><span class="line">use chroot = yes</span><br><span class="line">max connections = 100</span><br><span class="line">syslog facility = local5</span><br><span class="line">pid file = /var/run/rsyncd.pid</span><br><span class="line">log file = /var/log/rsyncd.log</span><br><span class="line">incoming chmod = Du=rwx,Dog=rx,Fu=rwx,Fgo=rx</span><br><span class="line"></span><br><span class="line">[manager]</span><br><span class="line">path = /data/version/</span><br><span class="line">ignore errors</span><br><span class="line">read only = true</span><br><span class="line">hosts allow = *</span><br><span class="line">auth users = zeng</span><br><span class="line">secrets file = /etc/rsyncd.secrets</span><br></pre></td></tr></table></figure>
+<p>编辑<code>rsyncd.secrets</code>，里面存了用户名和密码，注意格式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc ᐅ vim rsyncd.secrets</span><br><span class="line">zeng:rsync</span><br></pre></td></tr></table></figure></p>
+<p>配置完千万记得修改文件权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/data ᐅ chmod 600 /etc/rsyncd.conf             </span><br><span class="line">/data ᐅ chmod 600 /etc/rsyncd.secrets</span><br></pre></td></tr></table></figure></p>
+<p>然后启动<code>rsync</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync --daemon</span><br></pre></td></tr></table></figure></p>
+<h5 id="目标主机配置"><a href="#目标主机配置" class="headerlink" title="目标主机配置"></a>目标主机配置</h5><p>配置<code>rsync_manager_passwd.txt</code>就ok了。把密码<code>rsync</code>写进去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@754107d2a7f4 etc]# vim rsync_manager_passwd.txt</span><br><span class="line">rsync</span><br><span class="line">[root@754107d2a7f4 etc]# chmod 600 /etc/rsync_manager_passwd.txt</span><br></pre></td></tr></table></figure>
+<p>然后就可以同步了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@754107d2a7f4 data]# rsync -avz --delete --password-file=/etc/rsync_manager_passwd.txt --port=873 zeng@192.168.28.130::manager/datas/ /data/version/datas</span><br><span class="line">receiving incremental file list</span><br><span class="line">./</span><br><span class="line">version.txt</span><br><span class="line"></span><br><span class="line">sent 79 bytes  received 172 bytes  502.00 bytes/sec</span><br><span class="line">total size is 15  speedup is 0.06</span><br></pre></td></tr></table></figure></p>
+<p>写完睡觉！！！</p>
 
       
     </div>
@@ -394,9 +404,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ansible/" rel="tag"># ansible</a>
-          
-            <a href="/tags/nginx/" rel="tag"># nginx</a>
+            <a href="/tags/rsync/" rel="tag"># rsync</a>
           
         </div>
       
@@ -409,8 +417,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/08/docker防坑指南（一）/" rel="next" title="docker防坑指南（一）">
-                <i class="fa fa-chevron-left"></i> docker防坑指南（一）
+              <a href="/2018/03/13/itchat-tornado微信报警/" rel="next" title="itchat+tornado微信报警">
+                <i class="fa fa-chevron-left"></i> itchat+tornado微信报警
               </a>
             
           </div>
@@ -418,10 +426,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/13/itchat-tornado微信报警/" rel="prev" title="itchat+tornado微信报警">
-                itchat+tornado微信报警 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -499,8 +503,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -604,6 +617,22 @@ var jiathis_config={
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#实验用服务器"><span class="nav-number">1.</span> <span class="nav-text">实验用服务器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#rsync安装和命令"><span class="nav-number">2.</span> <span class="nav-text">rsync安装和命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#源主机配置"><span class="nav-number">3.</span> <span class="nav-text">源主机配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#目标主机配置"><span class="nav-number">4.</span> <span class="nav-text">目标主机配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

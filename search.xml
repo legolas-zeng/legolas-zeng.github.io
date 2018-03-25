@@ -3,6 +3,49 @@
   
     
     <entry>
+      <title><![CDATA[rsync配置（备忘）]]></title>
+      <url>/2018/03/25/rsync%E9%85%8D%E7%BD%AE%EF%BC%88%E5%A4%87%E5%BF%98%EF%BC%89/</url>
+      <content type="html"><![CDATA[<p><code>rsync</code>用于服务器间同步文件，常用于实时同步。先看看这个词怎么读吧，我就听过好几种读音的，标准<code>发音：（锐森）</code></p>
+<h5 id="实验用服务器"><a href="#实验用服务器" class="headerlink" title="实验用服务器"></a>实验用服务器</h5><ul>
+<li style="list-style: none"><input type="checkbox" checked> 源主机 192.168.28.130</li>
+<li style="list-style: none"><input type="checkbox" checked> 目标主机 172.19.0.2</li>
+</ul>
+<p>目标主机要从源主机上同步文件。</p>
+<h5 id="rsync安装和命令"><a href="#rsync安装和命令" class="headerlink" title="rsync安装和命令"></a>rsync安装和命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y rsync</span><br></pre></td></tr></table></figure>
+<p>启动命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync --daemon</span><br></pre></td></tr></table></figure></p>
+<h5 id="源主机配置"><a href="#源主机配置" class="headerlink" title="源主机配置"></a>源主机配置</h5><p>配置文件有3个：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> rsyncd.conf</li>
+<li style="list-style: none"><input type="checkbox" checked> rsyncd.secrets</li>
+<li style="list-style: none"><input type="checkbox" checked> rsync_manager_passwd.txt</li>
+</ul>
+<p><code>rsync_manager_passwd.txt</code>是密码文件，<code>rsyncd.conf</code>是配置文件，<code>rsyncd.secrets</code>是密码文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/etc ᐅ vim rsyncd.conf</span><br><span class="line">uid = root</span><br><span class="line">gid = root</span><br><span class="line">use chroot = yes</span><br><span class="line">max connections = 100</span><br><span class="line">syslog facility = local5</span><br><span class="line">pid file = /var/run/rsyncd.pid</span><br><span class="line">log file = /var/log/rsyncd.log</span><br><span class="line">incoming chmod = Du=rwx,Dog=rx,Fu=rwx,Fgo=rx</span><br><span class="line"></span><br><span class="line">[manager]</span><br><span class="line">path = /data/version/</span><br><span class="line">ignore errors</span><br><span class="line">read only = true</span><br><span class="line">hosts allow = *</span><br><span class="line">auth users = zeng</span><br><span class="line">secrets file = /etc/rsyncd.secrets</span><br></pre></td></tr></table></figure>
+<p>编辑<code>rsyncd.secrets</code>，里面存了用户名和密码，注意格式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc ᐅ vim rsyncd.secrets</span><br><span class="line">zeng:rsync</span><br></pre></td></tr></table></figure></p>
+<p>配置完千万记得修改文件权限：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/data ᐅ chmod 600 /etc/rsyncd.conf             </span><br><span class="line">/data ᐅ chmod 600 /etc/rsyncd.secrets</span><br></pre></td></tr></table></figure></p>
+<p>然后启动<code>rsync</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync --daemon</span><br></pre></td></tr></table></figure></p>
+<h5 id="目标主机配置"><a href="#目标主机配置" class="headerlink" title="目标主机配置"></a>目标主机配置</h5><p>配置<code>rsync_manager_passwd.txt</code>就ok了。把密码<code>rsync</code>写进去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@754107d2a7f4 etc]# vim rsync_manager_passwd.txt</span><br><span class="line">rsync</span><br><span class="line">[root@754107d2a7f4 etc]# chmod 600 /etc/rsync_manager_passwd.txt</span><br></pre></td></tr></table></figure>
+<p>然后就可以同步了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@754107d2a7f4 data]# rsync -avz --delete --password-file=/etc/rsync_manager_passwd.txt --port=873 zeng@192.168.28.130::manager/datas/ /data/version/datas</span><br><span class="line">receiving incremental file list</span><br><span class="line">./</span><br><span class="line">version.txt</span><br><span class="line"></span><br><span class="line">sent 79 bytes  received 172 bytes  502.00 bytes/sec</span><br><span class="line">total size is 15  speedup is 0.06</span><br></pre></td></tr></table></figure></p>
+<p>写完睡觉！！！</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> rsync </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[itchat+tornado微信报警]]></title>
       <url>/2018/03/13/itchat-tornado%E5%BE%AE%E4%BF%A1%E6%8A%A5%E8%AD%A6/</url>
       <content type="html"><![CDATA[<p>公司现在用着zabbix+tornado+微信企业号实现实时报警功能，但是我嫌麻烦，不想多安装个微信企业号。于是就想通过itchat来转发报警信息。<br>大概结构如下图：</p>
@@ -250,9 +293,9 @@
         
         <tags>
             
-            <tag> supervisor </tag>
-            
             <tag> 运维 </tag>
+            
+            <tag> supervisor </tag>
             
         </tags>
         
