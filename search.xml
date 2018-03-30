@@ -20,6 +20,7 @@
 <p> ok，保存，应用。</p>
 <h5 id="任务构建"><a href="#任务构建" class="headerlink" title="任务构建"></a>任务构建</h5><p> 返回到主界面，点击<code>新建任务</code>，<code>构建一个maven项目</code>。</p>
 <p> <img src="/images/jenkins-2.png" alt="image"></p>
+<p> 然后是源码管理，这里公司用的svn，你也可以用git。</p>
 <p> <img src="/images/jenkins-3.png" alt="image"></p>
 <p> <img src="/images/jenkins-4.png" alt="image"></p>
 <p> 注意这个<code>pom.xml</code>文件是maven项目自带的文件，有时候会出现找不到该文件的错误，你就写成相对路径。</p>
