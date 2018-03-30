@@ -263,6 +263,174 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/jenkins-tomcat-svn自动发布maven项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zenganiu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冻龄大叔">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/30/jenkins-tomcat-svn自动发布maven项目/" itemprop="url">jenkins+tomcat+svn自动发布maven项目</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-30T23:48:31+08:00">
+                2018-03-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/自动化/" itemprop="url" rel="index">
+                    <span itemprop="name">自动化</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="软件版本"><a href="#软件版本" class="headerlink" title="软件版本"></a>软件版本</h4><ul>
+<li style="list-style: none"><input type="checkbox" checked> jenkins 2.11</li>
+<li style="list-style: none"><input type="checkbox" checked> centos 7</li>
+<li style="list-style: none"><input type="checkbox" checked> tomcat 7</li>
+<li style="list-style: none"><input type="checkbox" checked> jenkins服务器ip 192.168.28.130</li>
+<li style="list-style: none"><input type="checkbox" checked> 远程发布服务器 172.19.0.2</li>
+</ul>
+<h4 id="jenkis配置"><a href="#jenkis配置" class="headerlink" title="jenkis配置"></a>jenkis配置</h4><p>jenkins的下载安装就不写了，网上太多教程。安装完记得在安装一些必要的插件。</p>
+<h5 id="ssh设置"><a href="#ssh设置" class="headerlink" title="ssh设置"></a>ssh设置</h5><p>在<code>系统管理</code>-》<code>系统设置</code>里面找到<code>SSH Servers</code>配置栏。</p>
+<p><img src="/images/jenkins-1.png" alt="image"></p>
+<p><code>Remote Directory</code>:远程ssh服务器的根目录，这里我发布版本就设置为<code>/data/version</code></p>
+<p>然后小手点一下旁边的<code>Test Configuration</code>,一般测试没问题。</p>
+<p> ok，保存，应用。</p>
+<h5 id="任务构建"><a href="#任务构建" class="headerlink" title="任务构建"></a>任务构建</h5><p> 返回到主界面，点击<code>新建任务</code>，<code>构建一个maven项目</code>。</p>
+<p> <img src="/images/jenkins-2.png" alt="image"></p>
+<p> <img src="/images/jenkins-3.png" alt="image"></p>
+<p> <img src="/images/jenkins-4.png" alt="image"></p>
+<p> 注意这个<code>pom.xml</code>文件是maven项目自带的文件，有时候会出现找不到该文件的错误，你就写成相对路径。</p>
+<p> 然后打包命令：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clean package</span><br></pre></td></tr></table></figure></p>
+<p> 打包之后的包在maven的文件夹里，可以在控制台输出中看到。</p>
+<p> 最后配置ssh传输打出来的包。注意这里的<code>removeprefix</code>是指刚在系统设置里面设置的远程ssh服务器根目录里面的子目录。<code>exec command</code>填入我要执行的脚本。</p>
+<p> <img src="/images/jenkins-5.png" alt="image"></p>
+<p> 保存应用，点立即构建….<br> <img src="/images/jenkins-6.png" alt="image"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/25/rsync配置（备忘）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1825,204 +1993,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/18/ansible踩坑札记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zenganiu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="冻龄大叔">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/18/ansible踩坑札记/" itemprop="url">ansible踩坑札记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-18T23:26:15+08:00">
-                2018-01-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/运维工具/" itemprop="url" rel="index">
-                    <span itemprop="name">运维工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="版本工具"><a href="#版本工具" class="headerlink" title="版本工具"></a>版本工具</h3><ul>
-<li style="list-style: none"><input type="checkbox" checked> Centos7</li>
-<li style="list-style: none"><input type="checkbox" checked> Ansible2.4.2</li>
-<li style="list-style: none"><input type="checkbox" checked> Python2.7</li>
-<li style="list-style: none"><input type="checkbox" checked> docker</li>
-</ul>
-<h3 id="主机分配"><a href="#主机分配" class="headerlink" title="主机分配"></a>主机分配</h3><blockquote>
-<p>server: 192.168.203.129<br>client: 172.17.0.3（docker虚拟镜像，centos6.9版本）</p>
-</blockquote>
-<h3 id="Ansible安装"><a href="#Ansible安装" class="headerlink" title="Ansible安装"></a>Ansible安装</h3><p>基础件安装：</p>
-<blockquote>
-<ul>
-<li>pip install setuptools PyYAML Jinja2 paramiko simplejson</li>
-</ul>
-</blockquote>
-<p>ansible安装：</p>
-<blockquote>
-<ul>
-<li>pip install ansible</li>
-</ul>
-</blockquote>
-<p>安装好之后，查看下ansible的版本。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# ansible --version</span><br><span class="line">ansible 2.4.2.0</span><br><span class="line">  config file = None</span><br><span class="line">  configured module search path = [u&apos;/root/.ansible/plugins/modules&apos;, u&apos;/usr/share/ansible/plugins/modules&apos;]</span><br><span class="line">  ansible python module location = /usr/lib/python2.7/site-packages/ansible</span><br><span class="line">  executable location = /usr/bin/ansible</span><br><span class="line">  python version = 2.7.5 (default, Nov 20 2015, 02:00:19) [GCC 4.8.5 20150623 (Red Hat 4.8.5-4)]</span><br></pre></td></tr></table></figure></p>
-<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>ansible是需要ssh登录客户端,服务端和客户端都需要安装ssh,别忘记要启动</p>
-<blockquote>
-<ul>
-<li>yum -y install openssh-server openssh-clients</li>
-<li>/etc/init.d/sshd start</li>
-</ul>
-</blockquote>
-<p>在<code>master</code>上生成秘钥</p>
-<blockquote>
-<ul>
-<li>ssh-keygen</li>
-</ul>
-</blockquote>
-<p>然后一路回车，在<code>/root/.ssh</code>处查看密钥，修改<code>client</code>的root密码，然后将生产的密钥<code>ssh-copy-id</code>到<code>client</code>。</p>
-<blockquote>
-<ul>
-<li>ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.17.0.3</li>
-</ul>
-</blockquote>
-<p>提示输入<code>client</code>的root密码，成功后可以测试登录</p>
-<blockquote>
-<ul>
-<li>ssh root@172.17.0.3</li>
-</ul>
-</blockquote>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>到这一步算是安装完毕，现在开始修改配置文件。在<code>/etc/</code>目录下创建<code>ansible</code>目录，创建ansible.cfg文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible ᐅ vim ansible.cfg</span><br><span class="line">[defaults]</span><br><span class="line">hostfile=/etc/ansible/hosts</span><br><span class="line">private_key_file = /root/.ssh/id_rsa</span><br><span class="line">remote_user = root</span><br><span class="line">remote_port = 22</span><br><span class="line">host_key_checking = False</span><br></pre></td></tr></table></figure></p>
-<p>创建hosts文件，用于存储客户端ip和分组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible ᐅ vim hosts</span><br><span class="line">172.17.0.3</span><br></pre></td></tr></table></figure></p>
-<p>修改好后，就可以测试ansible了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ansible]# ansible &apos;172.17.0.3&apos; -m ping</span><br><span class="line">172.17.0.3 | SUCCESS =&gt; &#123;</span><br><span class="line">    &quot;changed&quot;: false,</span><br><span class="line">    &quot;ping&quot;: &quot;pong&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2070,7 +2047,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2081,7 +2058,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2092,7 +2069,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
