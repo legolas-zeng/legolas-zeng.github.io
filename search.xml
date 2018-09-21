@@ -3,6 +3,34 @@
   
     
     <entry>
+      <title><![CDATA[Fiddler抓包和requests请求]]></title>
+      <url>/2018/09/21/Fiddler%E6%8A%93%E5%8C%85%E5%92%8Crequests%E8%AF%B7%E6%B1%82/</url>
+      <content type="html"><![CDATA[<h4 id="Fiddler抓包和requests请求"><a href="#Fiddler抓包和requests请求" class="headerlink" title="Fiddler抓包和requests请求"></a>Fiddler抓包和requests请求</h4><p>最近需要爬一个网页，做自动化处理，早先想到用selenium模拟登陆，但是感觉太复杂了。网页登陆大概有两种模式：①账号密码通过表单提交；②构造请求头。</p>
+<h5 id="提交账号密码抓包"><a href="#提交账号密码抓包" class="headerlink" title="提交账号密码抓包"></a>提交账号密码抓包</h5><p><img src="/images/Fiddler抓包和requests请求1.png" alt="image"><br>然后打开<code>Fiddler</code>软件，抓包<br><img src="/images/Fiddler抓包和requests请求2.png" alt="image"></p>
+<p>在<code>inspeors</code>→<code>Raw</code>可以看到请求头信息，其中<code>Authorization</code>就是提交的账号密码，这里很明显是个密文。我们把<code>YWRjZGU6MTIzNDU2</code>解密下。<br><img src="/images/Fiddler抓包和requests请求3.gif" alt="image"></p>
+<h4 id="开始撸代码"><a href="#开始撸代码" class="headerlink" title="开始撸代码"></a>开始撸代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">def login_getPage(url,ip):</span><br><span class="line">    # data = &apos;Basic YWRjZGU6MTIzNDU2&apos;</span><br><span class="line">    # 以下是直接把请求头复制进来</span><br><span class="line">    headers = &#123;</span><br><span class="line">        &apos;Host&apos;: ip,</span><br><span class="line">        &apos;Connection&apos;: &apos;keep-alive&apos;,</span><br><span class="line">        &apos;Cache-Control&apos;: &apos;max-age=0&apos;,</span><br><span class="line">        &apos;Authorization&apos;: &apos;Basic YWRjZGU6MTIzNDU2&apos;,</span><br><span class="line">        &apos;Upgrade-Insecure-Requests&apos;: &apos;1&apos;,</span><br><span class="line">        &apos;User-Agent&apos;: &apos;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36&apos;,</span><br><span class="line">        &apos;Accept&apos;: &apos;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8&apos;,</span><br><span class="line">        &apos;Accept-Encoding&apos;: &apos;gzip, deflate&apos;,</span><br><span class="line">        &apos;Accept-Language&apos;: &apos;zh-CN,zh;q=0.9&apos;,</span><br><span class="line">    &#125;</span><br><span class="line">    data = &#123;</span><br><span class="line">        &quot;username&quot;: &quot;abcd&quot;,</span><br><span class="line">        &quot;password&quot;: &quot;123456&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    r = requests.get(url, data=data, headers=headers)</span><br><span class="line">    if r.status_code == 200: # 判断是否请求成功</span><br><span class="line">        r.encoding = &apos;utf-8&apos;</span><br><span class="line">        response = r.text</span><br><span class="line">        return response</span><br><span class="line">    else:</span><br><span class="line">        print r.status_code</span><br><span class="line">        return 1</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> python </tag>
+            
+            <tag> 运维 </tag>
+            
+            <tag> 爬虫 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[apache路径大小写敏感]]></title>
       <url>/2018/08/29/apache%E8%B7%AF%E5%BE%84%E5%A4%A7%E5%B0%8F%E5%86%99%E6%95%8F%E6%84%9F/</url>
       <content type="html"><![CDATA[<p>今天部署了一个静态网页index.html，用的Apache，不为啥，就因为静态网站的文件中有中文路径，nginx对中文支持不是很好。所以改用Apache</p>
@@ -18,6 +46,20 @@
 <h3 id="设置路径"><a href="#设置路径" class="headerlink" title="设置路径"></a>设置路径</h3><p>就用httpd的默认路径吧<code>DocumentRoot &quot;/var/www/html&quot;</code>，把静态文件全部放到html目录下。<br>重启Apache…..</p>
 ]]></content>
       
+        <categories>
+            
+            <category> 运维 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 运维 </tag>
+            
+            <tag> apache </tag>
+            
+        </tags>
         
     </entry>
     
@@ -587,9 +629,9 @@
         
         <tags>
             
-            <tag> ansible </tag>
-            
             <tag> 运维 </tag>
+            
+            <tag> ansible </tag>
             
         </tags>
         
