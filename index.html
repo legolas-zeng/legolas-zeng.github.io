@@ -263,6 +263,297 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/04/zabbix3-4监控ESXI6-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zenganiu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冻龄大叔">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/04/zabbix3-4监控ESXI6-7/" itemprop="url">zabbix3.4监控ESXI6.7</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-04T23:28:45+08:00">
+                2019-03-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/运维/" itemprop="url" rel="index">
+                    <span itemprop="name">运维</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5 id="1-修改zabbix配置-然后重启zabbix"><a href="#1-修改zabbix配置-然后重启zabbix" class="headerlink" title="1.修改zabbix配置,然后重启zabbix"></a>1.修改zabbix配置,然后重启zabbix</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@Zabbix_server ~]# vim /etc/zabbix/zabbix_server.conf</span><br><span class="line"># 虚拟机ESXI监控配置</span><br><span class="line">StartVMwareCollectors=6  #监控实例数量，取值(0-250)</span><br><span class="line">VMwareCacheSize=50M</span><br><span class="line">VMwareFrequency=10</span><br><span class="line">VMwarePerfFrequency=60  #zabbix获取更新vmware集群结构的最小间隔时间,分钟</span><br><span class="line">VMwareTimeout=300</span><br></pre></td></tr></table></figure>
+<p>查看zabbix日志是否有显示成功:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@Zabbix_server ~]# tail -f /var/log/zabbix/zabbix_server.log</span><br><span class="line">   .......</span><br><span class="line">   379:20190225:143354.621 SNMP monitoring:           YES</span><br><span class="line">   379:20190225:143354.621 IPMI monitoring:           YES</span><br><span class="line">   379:20190225:143354.621 Web monitoring:            YES</span><br><span class="line">   379:20190225:143354.621 VMware monitoring:         YES</span><br><span class="line">   379:20190225:143354.621 SMTP authentication:        NO</span><br><span class="line">   379:20190225:143354.621 Jabber notifications:      YES</span><br><span class="line">   379:20190225:143354.621 Ez Texting notifications:  YES</span><br><span class="line">   379:20190225:143354.621 ODBC:                      YES</span><br><span class="line">   379:20190225:143354.621 SSH2 support:              YES</span><br><span class="line">   379:20190225:143354.621 IPv6 support:              YES</span><br><span class="line">   379:20190225:143354.621 TLS support:               YES</span><br><span class="line">   379:20190225:143354.621 ******************************</span><br><span class="line">   379:20190225:143354.621 using configuration file: /etc/zabbix/zabbix_server.conf</span><br><span class="line">   ........</span><br></pre></td></tr></table></figure></p>
+<p>出现<code>VMware monitoring</code>值为<code>YES</code>，说明功能添加成功</p>
+<h5 id="2-zabbix添加主机"><a href="#2-zabbix添加主机" class="headerlink" title="2.zabbix添加主机"></a>2.zabbix添加主机</h5><p><img src="/images/esxi/zabbix-esxi-1.png" alt="image"></p>
+<p>注意:</p>
+<blockquote>
+<p>1.主机名一定是UUID，不然zabbix监控项那里会报错<code>Unknown hypervisor uuid.</code></p>
+<p>2.端口是80</p>
+</blockquote>
+<p>宏的设定:<br><img src="/images/esxi/zabbix-esxi-3.png" alt="image"></p>
+<blockquote>
+<p>{$URL} VMware (vCenter or ESX hypervisor) SDK URL (<a href="https://servername/sdk" target="_blank" rel="noopener">https://servername/sdk</a>).</p>
+<p>{$USERNAME} ESXI 用户名</p>
+<p>{$PASSWORD} ESXI 用户密码</p>
+</blockquote>
+<h5 id="3-获取UUID"><a href="#3-获取UUID" class="headerlink" title="3.获取UUID"></a>3.获取UUID</h5><p><img src="/images/esxi/zabbix-esxi-5.png" alt="image"></p>
+<p>登录web<code>Vclient</code>，把<code>Config</code>Vclient<code>，把</code>Config.HostAgent.plugins.solo.enableMob<code>改成</code>true`，也可以登录客户端修改，不同版本的ESXI，界面有些许不同。</p>
+<p>这个服务在esxi6.0以上默认是关闭的。<br>这个时候打开浏览器输入网址<code>https://x.x.x.x/mob/?moid=ha-host&amp;doPath=hardware.systemInfo</code>就可以看到。</p>
+<h5 id="4-zabbix画图"><a href="#4-zabbix画图" class="headerlink" title="4.zabbix画图"></a>4.zabbix画图</h5><p><img src="/images/esxi/zabbix-esxi-2.png" alt="image"></p>
+<p>打开<code>配置</code>-&gt;<code>模板</code>-&gt;找到vmware的三个模板-&gt;<code>创建图形</code>，再根据自己的需求去画图，貌似只有<code>Template VM VMware Guest</code>和<code>Template VM VMware Hypervisor</code>可以画图，不过已经够用了。</p>
+<h5 id="5-grafana可视化ESXI"><a href="#5-grafana可视化ESXI" class="headerlink" title="5.grafana可视化ESXI"></a>5.grafana可视化ESXI</h5><p><img src="/images/esxi/zabbix-esxi-6.png" alt="image"><br>打开grafana的dashboards<a href="https://grafana.com/dashboards" target="_blank" rel="noopener">网址</a>,搜索esxi，选下载数对多的那个。<br><img src="/images/esxi/zabbix-esxi-7.png" alt="image"><br>copy它的ID<code>4812</code>,打开grafana的网址，导入ID<br><img src="/images/esxi/zabbix-esxi-8.png" alt="image"><br>这个时候是没有数据显示的，需要再设置下。<br>进入这个dashboards的<code>settings</code>,设置<code>Variables</code>,Group设置query的时候，由于这个dashboards只是用于esxi，所以regex只匹配esxi的分组，这里你们根据你们的情况做匹配。</p>
+<p>参考文档：</p>
+<p><a href="https://yq.aliyun.com/articles/669913" target="_blank" rel="noopener">https://yq.aliyun.com/articles/669913</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/20/多线程爬虫-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zenganiu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冻龄大叔">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/20/多线程爬虫-1/" itemprop="url">多线程爬虫(1)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-20T10:49:34+08:00">
+                2018-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/Fiddler抓包和requests请求/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1559,339 +1850,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/27/远程控制supervisor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zenganiu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="冻龄大叔">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/27/远程控制supervisor/" itemprop="url">远程控制supervisor</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-27T23:41:12+08:00">
-                2018-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/运维工具/" itemprop="url" rel="index">
-                    <span itemprop="name">运维工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><code>supervisor</code>启动后，自动开放<code>RPC</code>功能，可通过<code>XML-RPC API</code>调用管理进程。官方文档请移步<a href="http://supervisord.org/api.html" target="_blank" rel="noopener">这里</a>。</p>
-<h3 id="连接supervisor"><a href="#连接supervisor" class="headerlink" title="连接supervisor"></a>连接supervisor</h3><p>使用Python的xmlrpclib客户端库进行此操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import xmlrpclib</span><br><span class="line"></span><br><span class="line">server = xmlrpclib.Server(&apos;http://用户名:密码@supervisor的ip:端口/RPC2&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>例如这样的：</p>
-<blockquote>
-<p>server = xmlrpclib.Server(‘<a href="http://user:123@192.168.28.130:9001/RPC2" target="_blank" rel="noopener">http://user:123@192.168.28.130:9001/RPC2</a>‘)</p>
-</blockquote>
-<h3 id="supervisor的API方法"><a href="#supervisor的API方法" class="headerlink" title="supervisor的API方法"></a>supervisor的API方法</h3><p>方法好的，可以通过<code>system.listMethods()</code>查看有哪些可以用的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">In [11]: server.system.listMethods()</span><br><span class="line">Out[11]:</span><br><span class="line">[&apos;supervisor.addProcessGroup&apos;,</span><br><span class="line"> &apos;supervisor.clearAllProcessLogs&apos;,</span><br><span class="line"> &apos;supervisor.clearLog&apos;,</span><br><span class="line"> &apos;supervisor.clearProcessLog&apos;,</span><br><span class="line"> &apos;supervisor.clearProcessLogs&apos;,</span><br><span class="line"> &apos;supervisor.getAPIVersion&apos;,</span><br><span class="line"> &apos;supervisor.getAllConfigInfo&apos;,</span><br><span class="line"> &apos;supervisor.getAllProcessInfo&apos;,</span><br><span class="line"> &apos;supervisor.getIdentification&apos;,</span><br><span class="line"> &apos;supervisor.getPID&apos;,</span><br><span class="line"> &apos;supervisor.getProcessInfo&apos;,</span><br><span class="line"> &apos;supervisor.getState&apos;,</span><br><span class="line"> &apos;supervisor.getSupervisorVersion&apos;,</span><br><span class="line"> &apos;supervisor.getVersion&apos;,</span><br><span class="line"> &apos;supervisor.readLog&apos;,</span><br><span class="line"> &apos;supervisor.readMainLog&apos;,</span><br><span class="line"> &apos;supervisor.readProcessLog&apos;,</span><br><span class="line"> &apos;supervisor.readProcessStderrLog&apos;,</span><br><span class="line"> &apos;supervisor.readProcessStdoutLog&apos;,</span><br><span class="line"> &apos;supervisor.reloadConfig&apos;,</span><br><span class="line"> &apos;supervisor.removeProcessGroup&apos;,</span><br><span class="line"> &apos;supervisor.restart&apos;,</span><br><span class="line"> &apos;supervisor.sendProcessStdin&apos;,</span><br><span class="line"> &apos;supervisor.sendRemoteCommEvent&apos;,</span><br><span class="line"> &apos;supervisor.shutdown&apos;,</span><br><span class="line"> &apos;supervisor.signalAllProcesses&apos;,</span><br><span class="line"> &apos;supervisor.signalProcess&apos;,</span><br><span class="line"> &apos;supervisor.signalProcessGroup&apos;,</span><br><span class="line"> &apos;supervisor.startAllProcesses&apos;,</span><br><span class="line"> &apos;supervisor.startProcess&apos;,</span><br><span class="line"> &apos;supervisor.startProcessGroup&apos;,</span><br><span class="line"> &apos;supervisor.stopAllProcesses&apos;,</span><br><span class="line"> &apos;supervisor.stopProcess&apos;,</span><br><span class="line"> &apos;supervisor.stopProcessGroup&apos;,</span><br><span class="line"> &apos;supervisor.tailProcessLog&apos;,</span><br><span class="line"> &apos;supervisor.tailProcessStderrLog&apos;,</span><br><span class="line"> &apos;supervisor.tailProcessStdoutLog&apos;,</span><br><span class="line"> &apos;system.listMethods&apos;,</span><br><span class="line"> &apos;system.methodHelp&apos;,</span><br><span class="line"> &apos;system.methodSignature&apos;,</span><br><span class="line"> &apos;system.multicall&apos;]</span><br></pre></td></tr></table></figure></p>
-<p>这些方法都非常好理解，挑几个常用的：</p>
-<h5 id="启动进程"><a href="#启动进程" class="headerlink" title="启动进程"></a>启动进程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [9]: server.supervisor.startProcess(&apos;nginx&apos;)</span><br><span class="line">Out[9]: True</span><br></pre></td></tr></table></figure>
-<p>里面进程名是<code>supervisord.conf</code>的<code>program</code>名，成功返回True。</p>
-<h5 id="停止进程"><a href="#停止进程" class="headerlink" title="停止进程"></a>停止进程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [10]: server.supervisor.stopProcess(&apos;nginx&apos;)</span><br><span class="line">Out[10]: True</span><br></pre></td></tr></table></figure>
-<h5 id="获取进程信息"><a href="#获取进程信息" class="headerlink" title="获取进程信息"></a>获取进程信息</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">In [16]: server.supervisor.getProcessInfo(&apos;nginx&apos;)</span><br><span class="line">Out[16]:</span><br><span class="line">&#123;&apos;description&apos;: &apos;Feb 27 05:02 PM&apos;,</span><br><span class="line"> &apos;exitstatus&apos;: -1,</span><br><span class="line"> &apos;group&apos;: &apos;nginx&apos;,</span><br><span class="line"> &apos;logfile&apos;: &apos;/tmp/nginx-stdout---supervisor-6LMS7i.log&apos;,</span><br><span class="line"> &apos;name&apos;: &apos;nginx&apos;,</span><br><span class="line"> &apos;now&apos;: 1519723492,</span><br><span class="line"> &apos;pid&apos;: 0,</span><br><span class="line"> &apos;spawnerr&apos;: &apos;&apos;,</span><br><span class="line"> &apos;start&apos;: 1519722170,</span><br><span class="line"> &apos;state&apos;: 0,</span><br><span class="line"> &apos;statename&apos;: &apos;STOPPED&apos;,</span><br><span class="line"> &apos;stderr_logfile&apos;: &apos;/tmp/nginx-stderr---supervisor-FICVoc.log&apos;,</span><br><span class="line"> &apos;stdout_logfile&apos;: &apos;/tmp/nginx-stdout---supervisor-6LMS7i.log&apos;,</span><br><span class="line"> &apos;stop&apos;: 1519722172&#125;</span><br></pre></td></tr></table></figure>
-<p><code>&#39;state&#39;: 0</code>说明已经停止进程了。</p>
-<h3 id="整合django"><a href="#整合django" class="headerlink" title="整合django"></a>整合django</h3><p>此坑日后再填</p>
-<p>参考文档：</p>
-<p><code>官网文档</code>：<a href="http://supervisord.org/api.html" target="_blank" rel="noopener">http://supervisord.org/api.html</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/supervisor进程管理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zenganiu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="冻龄大叔">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/10/supervisor进程管理/" itemprop="url">supervisor进程管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T15:52:21+08:00">
-                2018-02-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/运维工具/" itemprop="url" rel="index">
-                    <span itemprop="name">运维工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>supervisor是python写的linux进程管理工具，安装使用简单</p>
-<h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><p>本次配置使用的工具如下：</p>
-<blockquote>
-<p>centos7</p>
-<p>python2.7(系统自带)</p>
-<p>mysql5.7</p>
-<p>redis4</p>
-<p>supervisor</p>
-</blockquote>
-<p>安装过程很简单，先安装<code>python-setuptools</code>工具，再安装工具里面的<code>supervisor</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install python-setuptools</span><br><span class="line">easy_install supervisor</span><br></pre></td></tr></table></figure></p>
-<p>安装完成后，新建一个<code>supervisor</code>文件夹，再生成配置文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/supervisor</span><br><span class="line">echo_supervisord_conf &gt; /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p><code>supervisor</code>共有三个命令：</p>
-<ul>
-<li style="list-style: none"><input type="checkbox" checked> supervisord</li>
-<li style="list-style: none"><input type="checkbox" checked> supervisorctl</li>
-<li style="list-style: none"><input type="checkbox" checked> echo_supervisord_conf</li>
-</ul>
-<p>启动命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
-<p>启动前，先配置先配置文件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[inet_http_server]         </span><br><span class="line">port=0.0.0.0:9001       #设置允许任何ip登录后台   </span><br><span class="line">username=user           #设置默认账户   </span><br><span class="line">password=123</span><br></pre></td></tr></table></figure>
-<p>这里<code>port</code>默认是<code>127.0.0.1:9001</code>，把它改为<code>0.0.0.0:9001</code>。然后设置监控<code>redis</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[program:redis]</span><br><span class="line">autorestart=true</span><br><span class="line">autostart=true</span><br><span class="line">directory=/etc/redis</span><br><span class="line">command=/usr/bin/redis-server /etc/redis/6379_master.conf</span><br></pre></td></tr></table></figure>
-<p>非常的简单明了，我就不多解释了，唯一要讲的是redis安装的时候，他的配置文件一定要把<code>daemonize</code>设置成<code>no</code>,这样redis就不会进入守护进程模式，通过连接就能执行关闭redis，不然…..你只能启动redis而不能关闭它，并且它的状态会变成异常的<code>fatal</code>或者<code>BACKOFF</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[program:mysql]</span><br><span class="line">autorestart=true</span><br><span class="line">autostart=true</span><br><span class="line">directory=/usr/local/mysql</span><br><span class="line">command=/usr/bin/pidproxy /data/mysqldata/localhost.pid /usr/local/mysql/bin/mysqld_safe</span><br></pre></td></tr></table></figure>
-<p><code>mysql</code>的配置就不一样。根据<a href="http://www.supervisord.org/subprocess.html" target="_blank" rel="noopener">官网</a>的提示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[program:mysql]</span><br><span class="line">command=/path/to/pidproxy /path/to/pidfile /path/to/mysqld_safe</span><br></pre></td></tr></table></figure></p>
-<p>需要找到这<code>pidproxy</code>，<code>pidfile</code>，<code>mysqld_safe</code>,然后…然后就能召唤神龙了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#pidproxy</span><br><span class="line"></span><br><span class="line">~ ᐅ whereis pidproxy </span><br><span class="line">pidproxy: /usr/bin/pidproxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#pidfile</span><br><span class="line"></span><br><span class="line">mysql root@localhost:(none)&gt; show variables like &apos;pid_file&apos;\G;</span><br><span class="line">***************************[ 1. row ]***************************</span><br><span class="line">Variable_name | pid_file</span><br><span class="line">Value         | /data/mysqldata/localhost.pid</span><br><span class="line"></span><br><span class="line"># mysqld_safe</span><br><span class="line"></span><br><span class="line">~ ᐅ find / -name mysqld_safe</span><br><span class="line">/usr/local/mysql/bin/mysqld_safe</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/supervisor.png" alt="“图片描述”"><br>大概就这些，supervisor管理进程比较方便。局限性也多，有些想法或许可以实现，比如搭进程管理集群，配合django使用等等。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1946,7 +1904,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1968,7 +1926,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2046,7 +2004,7 @@
     <footer id="footer" class="footer">
       <div class="footer-inner">
         <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -3,6 +3,59 @@
   
     
     <entry>
+      <title><![CDATA[zabbix3.4监控ESXI6.7]]></title>
+      <url>/2019/03/04/zabbix3-4%E7%9B%91%E6%8E%A7ESXI6-7/</url>
+      <content type="html"><![CDATA[<h5 id="1-修改zabbix配置-然后重启zabbix"><a href="#1-修改zabbix配置-然后重启zabbix" class="headerlink" title="1.修改zabbix配置,然后重启zabbix"></a>1.修改zabbix配置,然后重启zabbix</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@Zabbix_server ~]# vim /etc/zabbix/zabbix_server.conf</span><br><span class="line"># 虚拟机ESXI监控配置</span><br><span class="line">StartVMwareCollectors=6  #监控实例数量，取值(0-250)</span><br><span class="line">VMwareCacheSize=50M</span><br><span class="line">VMwareFrequency=10</span><br><span class="line">VMwarePerfFrequency=60  #zabbix获取更新vmware集群结构的最小间隔时间,分钟</span><br><span class="line">VMwareTimeout=300</span><br></pre></td></tr></table></figure>
+<p>查看zabbix日志是否有显示成功:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@Zabbix_server ~]# tail -f /var/log/zabbix/zabbix_server.log</span><br><span class="line">   .......</span><br><span class="line">   379:20190225:143354.621 SNMP monitoring:           YES</span><br><span class="line">   379:20190225:143354.621 IPMI monitoring:           YES</span><br><span class="line">   379:20190225:143354.621 Web monitoring:            YES</span><br><span class="line">   379:20190225:143354.621 VMware monitoring:         YES</span><br><span class="line">   379:20190225:143354.621 SMTP authentication:        NO</span><br><span class="line">   379:20190225:143354.621 Jabber notifications:      YES</span><br><span class="line">   379:20190225:143354.621 Ez Texting notifications:  YES</span><br><span class="line">   379:20190225:143354.621 ODBC:                      YES</span><br><span class="line">   379:20190225:143354.621 SSH2 support:              YES</span><br><span class="line">   379:20190225:143354.621 IPv6 support:              YES</span><br><span class="line">   379:20190225:143354.621 TLS support:               YES</span><br><span class="line">   379:20190225:143354.621 ******************************</span><br><span class="line">   379:20190225:143354.621 using configuration file: /etc/zabbix/zabbix_server.conf</span><br><span class="line">   ........</span><br></pre></td></tr></table></figure></p>
+<p>出现<code>VMware monitoring</code>值为<code>YES</code>，说明功能添加成功</p>
+<h5 id="2-zabbix添加主机"><a href="#2-zabbix添加主机" class="headerlink" title="2.zabbix添加主机"></a>2.zabbix添加主机</h5><p><img src="/images/esxi/zabbix-esxi-1.png" alt="image"></p>
+<p>注意:</p>
+<blockquote>
+<p>1.主机名一定是UUID，不然zabbix监控项那里会报错<code>Unknown hypervisor uuid.</code></p>
+<p>2.端口是80</p>
+</blockquote>
+<p>宏的设定:<br><img src="/images/esxi/zabbix-esxi-3.png" alt="image"></p>
+<blockquote>
+<p>{$URL} VMware (vCenter or ESX hypervisor) SDK URL (<a href="https://servername/sdk" target="_blank" rel="noopener">https://servername/sdk</a>).</p>
+<p>{$USERNAME} ESXI 用户名</p>
+<p>{$PASSWORD} ESXI 用户密码</p>
+</blockquote>
+<h5 id="3-获取UUID"><a href="#3-获取UUID" class="headerlink" title="3.获取UUID"></a>3.获取UUID</h5><p><img src="/images/esxi/zabbix-esxi-5.png" alt="image"></p>
+<p>登录web<code>Vclient</code>，把<code>Config</code>Vclient<code>，把</code>Config.HostAgent.plugins.solo.enableMob<code>改成</code>true`，也可以登录客户端修改，不同版本的ESXI，界面有些许不同。</p>
+<p>这个服务在esxi6.0以上默认是关闭的。<br>这个时候打开浏览器输入网址<code>https://x.x.x.x/mob/?moid=ha-host&amp;doPath=hardware.systemInfo</code>就可以看到。</p>
+<h5 id="4-zabbix画图"><a href="#4-zabbix画图" class="headerlink" title="4.zabbix画图"></a>4.zabbix画图</h5><p><img src="/images/esxi/zabbix-esxi-2.png" alt="image"></p>
+<p>打开<code>配置</code>-&gt;<code>模板</code>-&gt;找到vmware的三个模板-&gt;<code>创建图形</code>，再根据自己的需求去画图，貌似只有<code>Template VM VMware Guest</code>和<code>Template VM VMware Hypervisor</code>可以画图，不过已经够用了。</p>
+<h5 id="5-grafana可视化ESXI"><a href="#5-grafana可视化ESXI" class="headerlink" title="5.grafana可视化ESXI"></a>5.grafana可视化ESXI</h5><p><img src="/images/esxi/zabbix-esxi-6.png" alt="image"><br>打开grafana的dashboards<a href="https://grafana.com/dashboards" target="_blank" rel="noopener">网址</a>,搜索esxi，选下载数对多的那个。<br><img src="/images/esxi/zabbix-esxi-7.png" alt="image"><br>copy它的ID<code>4812</code>,打开grafana的网址，导入ID<br><img src="/images/esxi/zabbix-esxi-8.png" alt="image"><br>这个时候是没有数据显示的，需要再设置下。<br>进入这个dashboards的<code>settings</code>,设置<code>Variables</code>,Group设置query的时候，由于这个dashboards只是用于esxi，所以regex只匹配esxi的分组，这里你们根据你们的情况做匹配。</p>
+<p>参考文档：</p>
+<p><a href="https://yq.aliyun.com/articles/669913" target="_blank" rel="noopener">https://yq.aliyun.com/articles/669913</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 运维 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 运维 </tag>
+            
+            <tag> zabbix </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[多线程爬虫(1)]]></title>
+      <url>/2018/10/20/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%88%AC%E8%99%AB-1/</url>
+      <content type="html"></content>
+      
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Fiddler抓包和requests请求]]></title>
       <url>/2018/09/21/Fiddler%E6%8A%93%E5%8C%85%E5%92%8Crequests%E8%AF%B7%E6%B1%82/</url>
       <content type="html"><![CDATA[<h4 id="Fiddler抓包和requests请求"><a href="#Fiddler抓包和requests请求" class="headerlink" title="Fiddler抓包和requests请求"></a>Fiddler抓包和requests请求</h4><p>最近需要爬一个网页，做自动化处理，早先想到用selenium模拟登陆，但是感觉太复杂了。网页登陆大概有两种模式：①账号密码通过表单提交；②构造请求头。</p>
