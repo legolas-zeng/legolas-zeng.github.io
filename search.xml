@@ -48,10 +48,51 @@
     </entry>
     
     <entry>
-      <title><![CDATA[多线程爬虫(1)]]></title>
+      <title><![CDATA[golang爬虫(1)]]></title>
       <url>/2018/10/20/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%88%AC%E8%99%AB-1/</url>
-      <content type="html"></content>
+      <content type="html"><![CDATA[<p>打开豆瓣电影TOP250，打算爬取电影的四个信息，豆瓣排名，图片，评分，电影名。</p>
+<p><img src="/images/go爬虫/golang爬取豆瓣电影1.png" alt="image"><br>所以先定义个结构体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Movie struct &#123;</span><br><span class="line">	Num 	string</span><br><span class="line">	Url  	string</span><br><span class="line">	Star 	string</span><br><span class="line">	Name 	string</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意豆瓣电影的网址，是有规律的：</p>
+<p><img src="/images/go爬虫/golang爬取豆瓣电影2.png" alt="image"></p>
+<p>每一页<code>start</code>分别为0,25,50…..<br>所以在主函数里面加个循环：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func main()&#123;</span><br><span class="line">	t1 := time.Now()</span><br><span class="line">	for i := 0; i &lt; 11; i++ &#123;</span><br><span class="line">		url := fmt.Sprintf(&quot;https://movie.douban.com/top250?start=%v&amp;filter=&quot;, i*25)</span><br><span class="line">		fmt.Printf(&quot;整在爬取第%v页&quot;,i+1)</span><br><span class="line">		res := getResponse(url)//定义的获取html的函数</span><br><span class="line">		DownloadImg(res)// 下载图片的函数</span><br><span class="line">	&#125;</span><br><span class="line">	elapsed := time.Since(t1)</span><br><span class="line">	fmt.Println(&quot;总共用时: &quot;, elapsed)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>爬虫第一步，获取html网页进行解析,安装<code>goquery</code></p>
+<blockquote>
+<p>gopm -g -v github.com/PuerkitoBio/goquery</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">func getResponse(url string)  []Movie&#123; </span><br><span class="line">	content,err:= goquery.NewDocument(url)</span><br><span class="line">	if err != nil&#123;</span><br><span class="line">		panic(err)</span><br><span class="line">	&#125;</span><br><span class="line">	return ParseResponse(content)//</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func ParseResponse(doc *goquery.Document) (pages []Movie) &#123;</span><br><span class="line">	doc.Find(&quot;div.item&quot;).Each(func(i int, s *goquery.Selection) &#123;</span><br><span class="line">		img,_ :=s.Find(&quot;img&quot;).Attr(&quot;src&quot;)</span><br><span class="line">		num:=s.Find(&quot;em&quot;).Text()</span><br><span class="line">		star:=s.Find(&quot;span.rating_num&quot;).Text()</span><br><span class="line">		name,_:=s.Find(&quot;img&quot;).Attr(&quot;alt&quot;)</span><br><span class="line">		pages = append(pages, Movie&#123;</span><br><span class="line">			Num: num,</span><br><span class="line">			Url:  img,</span><br><span class="line">			Star: star,</span><br><span class="line">			Name: name,</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;)</span><br><span class="line">	return pages</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里把<code>ParseResponse</code>函数作为返回值，把处理后的<code>Movie</code>切片返回。处理网页用到<code>goquery</code>的Find匹配网页元素。</p>
+<p><img src="/images/go爬虫/golang爬取豆瓣电影3.png" alt="image"></p>
+<p>查看网页的元素代码，看到这几个需要获取的信息都在<code>&lt;div class=&quot;item&gt;</code>中，所以先循环获取<code>item</code>:</p>
+<blockquote>
+<p>doc.Find(“div.item”).Each(func(i int, s *goquery.Selection)</p>
+</blockquote>
+<p>打印出来大概就是这样的：</p>
+<blockquote>
+<p>[…..{26 <a href="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p1963126880.jpg" target="_blank" rel="noopener">https://img3.doubanio.com/view/photo/s_ratio_poster/public/p1963126880.jpg</a> 9.2 乱世佳人} {27 <a href="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p462657443.jpg" target="_blank" rel="noopener">https://img3.doubanio.com/view/photo/s_ratio_poster/public/p462657443.jpg</a> 9.1 蝙蝠侠：黑暗骑士}….]</p>
+</blockquote>
+<p>最后一步下载图片，把图片url和图片名称传给<code>GetImg</code>方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func GetImg(url string , name string) &#123;</span><br><span class="line">	res, _ := http.Get(url)</span><br><span class="line">	file_name := imgpath + &quot;\\&quot; + name + &quot;.jpg&quot; //拼接图片路径</span><br><span class="line">	file, _ := os.Create(file_name)</span><br><span class="line">	io.Copy(file, res.Body)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/go爬虫/golang爬取豆瓣电影4.png" alt="image"><br>网速比较慢，测了几次都是10s多一点。</p>
+<p><img src="/images/go爬虫/golang爬取豆瓣电影5.png" alt="image"></p>
+<p>完整代码<a href="https://github.com/legolas-zeng/GOPATH/blob/master/src/code/%E7%88%AC%E8%99%AB/DoubanImg.go" target="_blank" rel="noopener">点这里</a></p>
+<hr>
+<p>参考文档：<br><a href="https://www.flysnow.org/2018/01/20/golang-goquery-examples-selector.html" target="_blank" rel="noopener">golang goquery selector(选择器) 示例大全</a><br><a href="https://github.com/go-crawler/douban-movie" target="_blank" rel="noopener">Golang爬虫 爬取豆瓣电影Top250</a></p>
+]]></content>
       
+        <categories>
+            
+            <category> go </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 爬虫 </tag>
+            
+            <tag> golag </tag>
+            
+        </tags>
         
     </entry>
     
