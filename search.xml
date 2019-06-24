@@ -3,6 +3,61 @@
   
     
     <entry>
+      <title><![CDATA[windows与linux之间同步文件]]></title>
+      <url>/2019/06/24/windows%E4%B8%8Elinux%E4%B9%8B%E9%97%B4%E5%90%8C%E6%AD%A5%E6%96%87%E4%BB%B6/</url>
+      <content type="html"><![CDATA[<p>公司要把金蝶数据库的文件同步备份起来，我马上想到了用<code>rsync</code>同步。<code>rsync</code>虽然是linux平台下的同步工具，也有windows版本的。</p>
+<h4 id="下载安装cwRsyncServer"><a href="#下载安装cwRsyncServer" class="headerlink" title="下载安装cwRsyncServer"></a>下载安装cwRsyncServer</h4><p>下载地址：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox"> <a href="https://www.backupassist.com/rsync/cwRsyncServer_4.1.0_Installer.zip" target="_blank" rel="noopener">https://www.backupassist.com/rsync/cwRsyncServer_4.1.0_Installer.zip</a></li>
+</ul>
+<p>安装路径：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox"> C:\Program Files (x86)\ICW</li>
+</ul>
+<p>配置文件：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox"> rsyncd.conf</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">use chroot = false</span><br><span class="line">strict modes = false</span><br><span class="line">hosts allow = *</span><br><span class="line">log file = rsyncd.log</span><br><span class="line"></span><br><span class="line"># Module definitions</span><br><span class="line"># Remember cygwin naming conventions : c:\work becomes /cygwin/c/work</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">[data]</span><br><span class="line">path = /cygdrive/g/dingdingfile</span><br><span class="line">read only = no</span><br><span class="line">#list = no</span><br><span class="line">hosts allow = *</span><br><span class="line">uid = 0</span><br><span class="line">gid = 0</span><br><span class="line">auth users = userdata</span><br><span class="line">secrets file = etc/rsyncd.secrets</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>path = /cygdrive/g/dingdingfile</code> 表示G盘下的dingdingfile 文件夹</li>
+</ul>
+<p><img src="/images/windows与linux之间同步文件/windows与linux之间同步文件1.png" alt="image"><br><img src="/images/windows与linux之间同步文件/windows与linux之间同步文件2.png" alt="image"></p>
+<ul>
+<li>安装的时候会新建一个<code>svc</code>账号，用于认证，你也可以在woi<code>windows</code>的<code>服务</code>里面更改、重启服务。</li>
+</ul>
+<h4 id="配置服务端"><a href="#配置服务端" class="headerlink" title="配置服务端"></a>配置服务端</h4><p>新建<code>C:\Program Files (x86)\ICW\etc\rsyncd.secrets</code>文件</p>
+<p>写入：</p>
+<blockquote>
+<p>userdata:123456</p>
+</blockquote>
+<h4 id="配置客户端"><a href="#配置客户端" class="headerlink" title="配置客户端"></a>配置客户端</h4><blockquote>
+<p>echo ‘123456’ &gt; /root/rsync_user.pwd</p>
+<p>chomd 666 /root/rsync_user.pwd</p>
+</blockquote>
+<p><img src="/images/windows与linux之间同步文件/windows与linux之间同步文件3.png" alt="image"></p>
+<h5 id="开始同步"><a href="#开始同步" class="headerlink" title="开始同步"></a>开始同步</h5><blockquote>
+<p>rsync -avz –progress –delete –password-file=/root/rsync_user.pwd userdata@x.x.x.x::data /tmp</p>
+</blockquote>
+<p><img src="/images/windows与linux之间同步文件/windows与linux之间同步文件4.png" alt="image"></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 运维工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 运维 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[zabbix3.4监控ESXI6.7]]></title>
       <url>/2019/03/04/zabbix3-4%E7%9B%91%E6%8E%A7ESXI6-7/</url>
       <content type="html"><![CDATA[<h5 id="1-修改zabbix配置-然后重启zabbix"><a href="#1-修改zabbix配置-然后重启zabbix" class="headerlink" title="1.修改zabbix配置,然后重启zabbix"></a>1.修改zabbix配置,然后重启zabbix</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@Zabbix_server ~]# vim /etc/zabbix/zabbix_server.conf</span><br><span class="line"># 虚拟机ESXI监控配置</span><br><span class="line">StartVMwareCollectors=6  #监控实例数量，取值(0-250)</span><br><span class="line">VMwareCacheSize=50M</span><br><span class="line">VMwareFrequency=10</span><br><span class="line">VMwarePerfFrequency=60  #zabbix获取更新vmware集群结构的最小间隔时间,分钟</span><br><span class="line">VMwareTimeout=300</span><br></pre></td></tr></table></figure>
@@ -723,9 +778,9 @@
         
         <tags>
             
-            <tag> 运维 </tag>
-            
             <tag> ansible </tag>
+            
+            <tag> 运维 </tag>
             
         </tags>
         
