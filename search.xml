@@ -3,6 +3,37 @@
   
     
     <entry>
+      <title><![CDATA[nginx使用fancyindex目录索引]]></title>
+      <url>/2020/02/26/nginx%E4%BD%BF%E7%94%A8fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/</url>
+      <content type="html"><![CDATA[<p>nginx 的默认目录索引很单调难看，后来有人做了个<code>fancyindex</code>插件，用于美化目录索引。</p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>重新编译nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/aperezdc/ngx-fancyindex/archive/v0.4.3.zip</span><br><span class="line"></span><br><span class="line">unzip v0.4.3.zip</span><br><span class="line"></span><br><span class="line">./configure --prefix=/usr/local/nginx --add-module=/xxxx/ngx-fancyindex-master</span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    charset utf-8,gbk;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line">        location /  &#123;</span><br><span class="line">            root  /home/wap/; # html网页的静态文件</span><br><span class="line">            index  index.html;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        location /download &#123;</span><br><span class="line">            root  /ftpfile;</span><br><span class="line">            autoindex on; # 开启索引功能</span><br><span class="line">            charset utf-8,gbk; # 支持中文</span><br><span class="line">            autoindex_exact_size off;         #关闭详细文件大小统计，让文件大小显示MB，GB单位，默认为b；</span><br><span class="line">            autoindex_localtime on;           #开启以服务器本地时区显示文件修改日期！</span><br><span class="line">            include  /data/Nginx-Fancyindex-Theme/fancyindex.conf</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="配置静态文件"><a href="#配置静态文件" class="headerlink" title="配置静态文件"></a>配置静态文件</h4><p>在github上面很多大佬写的界面，随便找一个，我用的是<code>https://github.com/alehaa/nginx-fancyindex-flat-theme</code>项目的样式，下载下来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/alehaa/nginx-fancyindex-flat-theme/releases/download/v1.0/nginx-fancyindex-flat-theme.tar.gz</span><br></pre></td></tr></table></figure>
+<p>包含以下文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. 1 501 games  695 2月  20 2018 footer.html</span><br><span class="line">-rw-r--r--. 1 501 games 1.1K 2月  20 2018 header.html</span><br><span class="line">drwxr-xr-x. 2 501 games   43 8月   8 15:13 js/</span><br><span class="line">-rw-r--r--. 1 501 games  854 2月  20 2018 theme.css</span><br></pre></td></tr></table></figure></p>
+<p>根据<code>fancyindex.conf</code>和<code>nginx.conf</code>文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fancyindex_header &quot;/theme/layout/header.html&quot;;</span><br><span class="line">fancyindex_footer &quot;/theme/layout/footer.html&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">root  /home/wap/</span><br></pre></td></tr></table></figure>
+<p>把静态文件放到<code>/home/wap/theme/layout</code>目录下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> linux </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 运维 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[django通过redis订阅发布实现实时进度条]]></title>
       <url>/2019/07/21/django%E9%80%9A%E8%BF%87redis%E8%AE%A2%E9%98%85%E5%8F%91%E5%B8%83%E5%AE%9E%E7%8E%B0%E5%AE%9E%E6%97%B6%E8%BF%9B%E5%BA%A6%E6%9D%A1/</url>
       <content type="html"><![CDATA[<p>redis有类似消息队列的功能，正好遇到需要实时进度条的功能，需要一个地方存后台任务执行的进度，之前存在mysql里面，然后让html的jQuery代码定时去读取，这个方法并不能做到实时性，且数据延时高，读取压力大。</p>
