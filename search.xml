@@ -25,7 +25,7 @@
 <p>把静态文件放到<code>/usr/local/nginx/html</code>目录下。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. 1 root root 537 12月 18 2018 50x.html</span><br><span class="line">drwxr-xr-x. 7 root root 105 1月  31 2019 fancyindex/</span><br><span class="line">-rw-r--r--. 1 root root 612 12月 18 2018 index.html</span><br><span class="line">drwxrwxr-x. 5 root root 147 1月  31 2019 theme/</span><br></pre></td></tr></table></figure>
 <p>执行加载命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/bin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
-<p>效果图：<br><img src="/image/nginx使用fancyindex目录索引/downloadfile.png" alt="image"></p>
+<p>效果图：<br><img src="/images/nginx使用fancyindex目录索引/downloadfile.png" alt="image"></p>
 ]]></content>
       
         <categories>
