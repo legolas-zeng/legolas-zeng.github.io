@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="运维,kubernetes," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="做一枚精致的壮汉~">
+<meta name="description" content="根据上一篇nginx使用fancyindex目录索引，部署到kubernetes1.16。 工具版本：  kubernetes1.16  nginx1.16  centos7  Dockerfile构建镜像1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253">
+<meta name="keywords" content="运维,kubernetes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="nginx结合kubernetes实现fancyindex目录索引">
 <meta property="og:url" content="http://yoursite.com/2020/02/26/nginx结合kubernetes实现fancyindex目录索引/index.html">
 <meta property="og:site_name" content="冻龄大叔">
-<meta property="og:description" content="做一枚精致的壮汉~">
+<meta property="og:description" content="根据上一篇nginx使用fancyindex目录索引，部署到kubernetes1.16。 工具版本：  kubernetes1.16  nginx1.16  centos7  Dockerfile构建镜像1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-26T15:33:58.676Z">
+<meta property="og:updated_time" content="2020-02-27T15:25:00.899Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx结合kubernetes实现fancyindex目录索引">
-<meta name="twitter:description" content="做一枚精致的壮汉~">
+<meta name="twitter:description" content="根据上一篇nginx使用fancyindex目录索引，部署到kubernetes1.16。 工具版本：  kubernetes1.16  nginx1.16  centos7  Dockerfile构建镜像1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253">
 
 
 
@@ -303,6 +304,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -330,7 +353,30 @@
       
 
       
-        
+        <p>根据上一篇<a href="http://zenganiu.xyz/2020/02/26/nginx%E4%BD%BF%E7%94%A8fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/" target="_blank" rel="noopener">nginx使用fancyindex目录索引</a>，部署到kubernetes1.16。</p>
+<h4 id="工具版本："><a href="#工具版本：" class="headerlink" title="工具版本："></a>工具版本：</h4><ul>
+<li style="list-style: none"><input type="checkbox" checked> kubernetes1.16</li>
+<li style="list-style: none"><input type="checkbox" checked> nginx1.16</li>
+<li style="list-style: none"><input type="checkbox" checked> centos7</li>
+</ul>
+<h4 id="Dockerfile构建镜像"><a href="#Dockerfile构建镜像" class="headerlink" title="Dockerfile构建镜像"></a>Dockerfile构建镜像</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:latest AS alpine-base</span><br><span class="line">WORKDIR /usr/local</span><br><span class="line">COPY nginx-1.16.0.tar.gz /usr/local</span><br><span class="line">#更换apline的源为阿里云的</span><br><span class="line">RUN echo &quot;http://mirrors.aliyun.com/alpine/latest-stable/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \</span><br><span class="line">    echo &quot;http://mirrors.aliyun.com/alpine/latest-stable/community/&quot; &gt;&gt; /etc/apk/repositories &amp;&amp; \</span><br><span class="line">    apk update &amp;&amp; \</span><br><span class="line">#安装wget 和git 我们为了使镜像最小化这个都放在另外一个镜像里面来实现</span><br><span class="line">    apk add --no-cache wget git &amp;&amp; \</span><br><span class="line">#解压nginx包</span><br><span class="line">    tar xvf nginx-1.16.0.tar.gz</span><br><span class="line"></span><br><span class="line">FROM alpine:latest</span><br><span class="line"></span><br><span class="line">WORKDIR /data</span><br><span class="line">COPY ngx-fancyindex-master.tar.gz /data</span><br><span class="line">RUN cd /data &amp;&amp; tar -zxvf ngx-fancyindex-master.tar.gz</span><br><span class="line"># 创建存放文件资源的目录</span><br><span class="line">RUN mkdir -p /ftpfile/download/</span><br><span class="line">RUN mkdir -p /data/Nginx-Fancyindex-Theme/</span><br><span class="line">ADD fancyindex.conf /data/Nginx-Fancyindex-Theme/fancyindex.conf</span><br><span class="line"></span><br><span class="line">WORKDIR /root</span><br><span class="line">#从上面一个镜像中把我们刚才下载安装的包拷贝到这个里面</span><br><span class="line">COPY --from=alpine-base /usr/local/nginx-1.16.0 /usr/local/nginx-1.16.0</span><br><span class="line"></span><br><span class="line">RUN echo &quot;http://mirrors.aliyun.com/alpine/latest-stable/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \</span><br><span class="line">    echo &quot;http://mirrors.aliyun.com/alpine/latest-stable/community/&quot; &gt;&gt; /etc/apk/repositories &amp;&amp; \</span><br><span class="line">    apk update &amp;&amp; \</span><br><span class="line">#安装编译安装需要的依赖</span><br><span class="line">    apk add --no-cache gcc libc-dev make openssl-dev pcre-dev zlib-dev linux-headers curl &amp;&amp; \</span><br><span class="line">    cd /usr/local/nginx-1.16.0/ &amp;&amp; \</span><br><span class="line">#执行编译安装</span><br><span class="line">    ./configure --prefix=/etc/nginx \</span><br><span class="line">    --sbin-path=/usr/sbin/nginx \</span><br><span class="line">    --modules-path=/usr/lib/nginx/modules \</span><br><span class="line">    --conf-path=/etc/nginx/nginx.conf \</span><br><span class="line">    --error-log-path=/var/log/nginx/error.log \</span><br><span class="line">    --http-log-path=/var/log/nginx/access.log \</span><br><span class="line">    --pid-path=/var/run/nginx.pid \</span><br><span class="line">    --lock-path=/var/run/nginx.lock \</span><br><span class="line">    --http-client-body-temp-path=/var/cache/nginx/client_temp \</span><br><span class="line">    --http-proxy-temp-path=/var/cache/nginx/proxy_temp \</span><br><span class="line">    --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \</span><br><span class="line">    --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \</span><br><span class="line">    --http-scgi-temp-path=/var/cache/nginx/scgi_temp \</span><br><span class="line">#指定安装扩展模块的位置</span><br><span class="line">    --add-module=/data/ngx-fancyindex-master \</span><br><span class="line">    --with-compat \</span><br><span class="line">    --with-file-aio \</span><br><span class="line">    --with-threads \</span><br><span class="line">    --with-http_addition_module \</span><br><span class="line">    --with-http_auth_request_module \</span><br><span class="line">    --with-http_dav_module \</span><br><span class="line">    --with-http_flv_module \</span><br><span class="line">    --with-http_gunzip_module \</span><br><span class="line">    --with-http_gzip_static_module \</span><br><span class="line">    --with-http_mp4_module \</span><br><span class="line">    --with-http_random_index_module \</span><br><span class="line">    --with-http_realip_module \</span><br><span class="line">    --with-http_secure_link_module \</span><br><span class="line">    --with-http_slice_module \</span><br><span class="line">    --with-http_ssl_module \</span><br><span class="line">    --with-http_stub_status_module \</span><br><span class="line">    --with-http_sub_module \</span><br><span class="line">    --with-http_v2_module \</span><br><span class="line">    --with-mail \</span><br><span class="line">    --with-mail_ssl_module \</span><br><span class="line">    --with-stream --with-stream_realip_module \</span><br><span class="line">    --with-stream_ssl_module \</span><br><span class="line">    --with-stream_ssl_preread_module \</span><br><span class="line">    --with-cc-opt=&apos;-g -O2 -fdebug-prefix-map=/data/builder/debuild/nginx-1.16.0/debian/debuild-base/nginx-1.16.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC&apos; \</span><br><span class="line">    --with-ld-opt=&apos;-Wl,-z,relro -Wl,-z,now -Wl,--as-needed -pie&apos; &amp;&amp; \</span><br><span class="line">    make &amp;&amp; make install &amp;&amp; \</span><br><span class="line">    mkdir -p /var/cache/nginx/client_temp &amp;&amp; \</span><br><span class="line">    rm -rf /usr/local/nginx-1.16.0</span><br><span class="line">#把主题拷贝到网站根目录下</span><br><span class="line">#COPY --from=alpine-base /usr/local/./Nginx-Fancyindex-Theme /etc/nginx/html</span><br><span class="line"></span><br><span class="line">ADD nginx.conf /etc/nginx/nginx.conf</span><br><span class="line">COPY html.tar.gz /etc/nginx/</span><br><span class="line">WORKDIR /etc/nginx/</span><br><span class="line">RUN rm -rf html/*</span><br><span class="line">RUN tar -zxvf html.tar.gz</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line">CMD [&quot;/bin/sh&quot;,&quot;-c&quot;,&quot;nginx -g &apos;daemon off;&apos;&quot;]</span><br></pre></td></tr></table></figure>
+<h5 id="将必须的文件拷贝到目录："><a href="#将必须的文件拷贝到目录：" class="headerlink" title="将必须的文件拷贝到目录："></a>将必须的文件拷贝到目录：</h5><p>这些文件在<a href="http://zenganiu.xyz/2020/02/26/nginx%E4%BD%BF%E7%94%A8fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/" target="_blank" rel="noopener">nginx使用fancyindex目录索引</a>有下载的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r-- 1 root root    3900 12月 24 15:26 Dockerfile</span><br><span class="line">-rw-r--r-- 1 root root     477 1月  31 2019 fancyindex.conf</span><br><span class="line">-rw-r--r-- 1 root root 1008700 12月 23 17:33 html.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 1032345 12月 24 14:38 nginx-1.16.0.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root     817 12月 24 15:33 nginx.conf</span><br><span class="line">-rw-r--r-- 1 root root    1006 12月 24 16:04 nginx-file-nodeport.yml</span><br><span class="line">-rw-r--r-- 1 root root   25657 12月 24 10:05 ngx-fancyindex-master.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>执行构建镜像命令：</p>
+<blockquote>
+<p>docker build -t harbor.xxx.com/xxx/ftpfile .</p>
+</blockquote>
+<p>上传镜像到仓库：</p>
+<blockquote>
+<p>docker push harbor.xxx.com/xxx/ftpfile</p>
+</blockquote>
+<h4 id="使用nfs存储"><a href="#使用nfs存储" class="headerlink" title="使用nfs存储"></a>使用nfs存储</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NFS服务器操作如下</span><br><span class="line">mkdir -p /home/kvm</span><br><span class="line">systemctl start rpcbind</span><br><span class="line">systemctl enable rpcbind</span><br><span class="line">systemctl enable nfs</span><br><span class="line">echo &quot;/home/kvm  *(rw,no_root_squash,sync)&quot; &gt;&gt;/etc/exports</span><br></pre></td></tr></table></figure>
+<p>使用的时候直接挂载目录就行。</p>
+<h4 id="deploy和server"><a href="#deploy和server" class="headerlink" title="deploy和server"></a>deploy和server</h4><p>nginx-file-nodeport.yaml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-file</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx-file</span><br><span class="line">    release: canary</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 8082</span><br><span class="line">    targetPort: 80</span><br><span class="line">    nodePort: 30002 # 定义端口</span><br><span class="line">    # 使用nodeport方式提供服务</span><br><span class="line">  type: NodePort</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-file-deploy</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx-file</span><br><span class="line">      release: canary</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx-file</span><br><span class="line">        release: canary</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx-file</span><br><span class="line">        image: harbor.xxx.com/xxx/ftpfile:latest</span><br><span class="line">        ports:</span><br><span class="line">        - name: httpd</span><br><span class="line">          containerPort: 80</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: download-file</span><br><span class="line">          mountPath: /ftpfile/download</span><br><span class="line">      imagePullSecrets:        #使用的secret</span><br><span class="line">      - name: registry-secret</span><br><span class="line">      volumes:</span><br><span class="line">      - name: download-file</span><br><span class="line">        nfs:</span><br><span class="line">          server: 1.2.3.4</span><br><span class="line">          path: /home/kvm/nginx/ftpfile/</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>kubectl apply -f nginx-file-nodeport.yaml</p>
+</blockquote>
+<h4 id="访问验证："><a href="#访问验证：" class="headerlink" title="访问验证："></a>访问验证：</h4><p>浏览器打开：x.x.x.x:30002/download</p>
+
       
     </div>
     
@@ -355,6 +401,14 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/运维/" rel="tag"># 运维</a>
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+        </div>
       
 
       
@@ -451,8 +505,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -482,7 +545,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -493,7 +556,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -556,6 +619,22 @@ var jiathis_config={
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#工具版本："><span class="nav-number">1.</span> <span class="nav-text">工具版本：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dockerfile构建镜像"><span class="nav-number">2.</span> <span class="nav-text">Dockerfile构建镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#将必须的文件拷贝到目录："><span class="nav-number">2.1.</span> <span class="nav-text">将必须的文件拷贝到目录：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用nfs存储"><span class="nav-number">3.</span> <span class="nav-text">使用nfs存储</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deploy和server"><span class="nav-number">4.</span> <span class="nav-text">deploy和server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#访问验证："><span class="nav-number">5.</span> <span class="nav-text">访问验证：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
