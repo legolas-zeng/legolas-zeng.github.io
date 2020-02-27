@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="ansible,nginx," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,21 +79,17 @@
 
 
 
-<meta name="description" content="国际惯例，先上一个tornado最简单的hello，world 1234567891011121314151617# -*-coding:utf-8 -*-import tornadofrom tornado import ioloop # 核心的I/O循环from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重">
-<meta name="keywords" content="ansible,nginx">
+<meta name="description" content="做一枚精致的壮汉~">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单机版的tornado+nginx反向代理">
-<meta property="og:url" content="http://yoursite.com/2018/03/08/单机版的tornado-nginx反向代理/index.html">
+<meta property="og:title" content="nginx结合kubernetes实现fancyindex目录索引">
+<meta property="og:url" content="http://yoursite.com/2020/02/26/nginx结合kubernetes实现fancyindex目录索引/index.html">
 <meta property="og:site_name" content="冻龄大叔">
-<meta property="og:description" content="国际惯例，先上一个tornado最简单的hello，world 1234567891011121314151617# -*-coding:utf-8 -*-import tornadofrom tornado import ioloop # 核心的I/O循环from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重">
+<meta property="og:description" content="做一枚精致的壮汉~">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/单机版的tornado-nginx反向代理1.png">
-<meta property="og:image" content="http://yoursite.com/images/单机版的tornado-nginx反向代理2.png">
-<meta property="og:updated_time" content="2018-03-13T15:58:32.228Z">
+<meta property="og:updated_time" content="2020-02-26T15:33:58.676Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="单机版的tornado+nginx反向代理">
-<meta name="twitter:description" content="国际惯例，先上一个tornado最简单的hello，world 1234567891011121314151617# -*-coding:utf-8 -*-import tornadofrom tornado import ioloop # 核心的I/O循环from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重">
-<meta name="twitter:image" content="http://yoursite.com/images/单机版的tornado-nginx反向代理1.png">
+<meta name="twitter:title" content="nginx结合kubernetes实现fancyindex目录索引">
+<meta name="twitter:description" content="做一枚精致的壮汉~">
 
 
 
@@ -123,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/08/单机版的tornado-nginx反向代理/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/02/26/nginx结合kubernetes实现fancyindex目录索引/"/>
 
 
 
 
 
-  <title>单机版的tornado+nginx反向代理 | 冻龄大叔</title>
+  <title>nginx结合kubernetes实现fancyindex目录索引 | 冻龄大叔</title>
   
 
 
@@ -267,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/08/单机版的tornado-nginx反向代理/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/26/nginx结合kubernetes实现fancyindex目录索引/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zenganiu">
@@ -284,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">单机版的tornado+nginx反向代理</h1>
+          <h1 class="post-title" itemprop="name headline">nginx结合kubernetes实现fancyindex目录索引</h1>
         
 
         <div class="post-meta">
@@ -296,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T23:09:40+08:00">
-                2018-03-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-26T23:33:58+08:00">
+                2020-02-26
               </time>
             
 
@@ -306,28 +302,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web后端/" itemprop="url" rel="index">
-                    <span itemprop="name">web后端</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -356,17 +330,7 @@
       
 
       
-        <p>国际惯例，先上一个tornado最简单的<code>hello，world</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># -*-coding:utf-8 -*-</span><br><span class="line">import tornado</span><br><span class="line">from tornado import ioloop # 核心的I/O循环</span><br><span class="line">from tornado import web # web框架的大部分主要功能，包含RequestHandler和Application两个重要的类</span><br><span class="line">from tornado.options import define, options</span><br><span class="line">define(&quot;port&quot;, default=8000, type=int)</span><br><span class="line"></span><br><span class="line">class IndexHandler(web.RequestHandler):</span><br><span class="line">    def get(self):</span><br><span class="line">        self.write(&apos;hello ,world&apos;)</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    tornado.options.parse_command_line()</span><br><span class="line">    app = tornado.web.Application(handlers=[(r&quot;/&quot;, IndexHandler)])</span><br><span class="line">    http_server = tornado.httpserver.HTTPServer(app)</span><br><span class="line">    http_server.listen(options.port)</span><br><span class="line">    tornado.ioloop.IOLoop.instance().start()</span><br></pre></td></tr></table></figure>
-<p>浏览器输入<code>ip：8000</code>就可以看到，说明tornado运行正常。</p>
-<p><img src="/images/单机版的tornado-nginx反向代理1.png" alt="image"></p>
-<p>如果我想有<code>http://zengabcdo.com/</code>访问<code>tornado</code>,就要用到反向代理。<br>现在<code>hosts</code>文件添加解析记录（win端修改<code>C:\Windows\System32\drivers\etc</code>的hosts），添加：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.28.130 zengabcdo.com</span><br></pre></td></tr></table></figure></p>
-<p>在nginx.conf上添加server模块：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80; # nginx监听端口</span><br><span class="line">        server_name  zengabcdo.com; # 虚拟主机名</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://192.168.28.130:8000; # 代理转发的地址</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后重新载入配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure></p>
-<p>浏览器输入：<a href="http://zengabcdo.com/" target="_blank" rel="noopener">http://zengabcdo.com/</a></p>
-<p><img src="/images/单机版的tornado-nginx反向代理2.png" alt="image"></p>
-<p>熟悉的hello，world……</p>
-
+        
       
     </div>
     
@@ -392,14 +356,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/ansible/" rel="tag"># ansible</a>
-          
-            <a href="/tags/nginx/" rel="tag"># nginx</a>
-          
-        </div>
-      
 
       
       
@@ -409,8 +365,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/08/docker防坑指南（一）/" rel="next" title="docker防坑指南（一）">
-                <i class="fa fa-chevron-left"></i> docker防坑指南（一）
+              <a href="/2020/02/26/nginx使用fancyindex目录索引/" rel="next" title="nginx使用fancyindex目录索引">
+                <i class="fa fa-chevron-left"></i> nginx使用fancyindex目录索引
               </a>
             
           </div>
@@ -418,10 +374,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/13/itchat-tornado微信报警/" rel="prev" title="itchat+tornado微信报警">
-                itchat+tornado微信报警 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

@@ -3,6 +3,14 @@
   
     
     <entry>
+      <title><![CDATA[nginx结合kubernetes实现fancyindex目录索引]]></title>
+      <url>/2020/02/26/nginx%E7%BB%93%E5%90%88kubernetes%E5%AE%9E%E7%8E%B0fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/</url>
+      <content type="html"></content>
+      
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[nginx使用fancyindex目录索引]]></title>
       <url>/2020/02/26/nginx%E4%BD%BF%E7%94%A8fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/</url>
       <content type="html"><![CDATA[<p>nginx 的默认目录索引很单调难看，后来有人做了个<code>fancyindex</code>插件，用于美化目录索引。</p>
@@ -13,9 +21,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/alehaa/nginx-fancyindex-flat-theme/releases/download/v1.0/nginx-fancyindex-flat-theme.tar.gz</span><br></pre></td></tr></table></figure>
 <p>包含以下文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. 1 501 games  695 2月  20 2018 footer.html</span><br><span class="line">-rw-r--r--. 1 501 games 1.1K 2月  20 2018 header.html</span><br><span class="line">drwxr-xr-x. 2 501 games   43 8月   8 15:13 js/</span><br><span class="line">-rw-r--r--. 1 501 games  854 2月  20 2018 theme.css</span><br></pre></td></tr></table></figure></p>
 <p>根据<code>fancyindex.conf</code>和<code>nginx.conf</code>文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fancyindex_header &quot;/theme/layout/header.html&quot;;</span><br><span class="line">fancyindex_footer &quot;/theme/layout/footer.html&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">root  /home/wap/</span><br></pre></td></tr></table></figure>
-<p>把静态文件放到<code>/home/wap/theme/layout</code>目录下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Include in location directive</span><br><span class="line">  fancyindex on;</span><br><span class="line">  fancyindex_localtime on; #on for local time zone. off for GMT</span><br><span class="line">  fancyindex_exact_size off; #off for human-readable. on for exact size in bytes</span><br><span class="line">  #fancyindex_header &quot;/fancyindex/header.html&quot;;</span><br><span class="line">  fancyindex_header &quot;/theme/layout/header.html&quot;;</span><br><span class="line">  fancyindex_footer &quot;/theme/layout/footer.html&quot;;</span><br><span class="line">  #fancyindex_footer &quot;/fancyindex/footer.html&quot;;</span><br><span class="line">  fancyindex_ignore &quot;fancyindex&quot;; #ignore this directory when showing list</span><br><span class="line"># end include</span><br></pre></td></tr></table></figure>
+<p>把静态文件放到<code>/usr/local/nginx/html</code>目录下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. 1 root root 537 12月 18 2018 50x.html</span><br><span class="line">drwxr-xr-x. 7 root root 105 1月  31 2019 fancyindex/</span><br><span class="line">-rw-r--r--. 1 root root 612 12月 18 2018 index.html</span><br><span class="line">drwxrwxr-x. 5 root root 147 1月  31 2019 theme/</span><br></pre></td></tr></table></figure>
+<p>执行加载命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/bin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
+<p>效果图：<br><img src="/image/nginx使用fancyindex目录索引/downloadfile.png" alt="image"></p>
 ]]></content>
       
         <categories>

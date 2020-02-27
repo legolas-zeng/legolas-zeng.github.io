@@ -87,10 +87,12 @@
 <meta property="og:site_name" content="冻龄大叔">
 <meta property="og:description" content="nginx 的默认目录索引很单调难看，后来有人做了个fancyindex插件，用于美化目录索引。 安装重新编译nginx 1234567wget https://github.com/aperezdc/ngx-fancyindex/archive/v0.4.3.zipunzip v0.4.3.zip./configure --prefix=/usr/local/nginx --add-module">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-26T15:27:07.005Z">
+<meta property="og:image" content="http://yoursite.com/image/nginx使用fancyindex目录索引/downloadfile.png">
+<meta property="og:updated_time" content="2020-02-27T14:12:25.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx使用fancyindex目录索引">
 <meta name="twitter:description" content="nginx 的默认目录索引很单调难看，后来有人做了个fancyindex插件，用于美化目录索引。 安装重新编译nginx 1234567wget https://github.com/aperezdc/ngx-fancyindex/archive/v0.4.3.zipunzip v0.4.3.zip./configure --prefix=/usr/local/nginx --add-module">
+<meta name="twitter:image" content="http://yoursite.com/image/nginx使用fancyindex目录索引/downloadfile.png">
 
 
 
@@ -361,9 +363,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/alehaa/nginx-fancyindex-flat-theme/releases/download/v1.0/nginx-fancyindex-flat-theme.tar.gz</span><br></pre></td></tr></table></figure>
 <p>包含以下文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. 1 501 games  695 2月  20 2018 footer.html</span><br><span class="line">-rw-r--r--. 1 501 games 1.1K 2月  20 2018 header.html</span><br><span class="line">drwxr-xr-x. 2 501 games   43 8月   8 15:13 js/</span><br><span class="line">-rw-r--r--. 1 501 games  854 2月  20 2018 theme.css</span><br></pre></td></tr></table></figure></p>
 <p>根据<code>fancyindex.conf</code>和<code>nginx.conf</code>文件:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fancyindex_header &quot;/theme/layout/header.html&quot;;</span><br><span class="line">fancyindex_footer &quot;/theme/layout/footer.html&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">root  /home/wap/</span><br></pre></td></tr></table></figure>
-<p>把静态文件放到<code>/home/wap/theme/layout</code>目录下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/bin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Include in location directive</span><br><span class="line">  fancyindex on;</span><br><span class="line">  fancyindex_localtime on; #on for local time zone. off for GMT</span><br><span class="line">  fancyindex_exact_size off; #off for human-readable. on for exact size in bytes</span><br><span class="line">  #fancyindex_header &quot;/fancyindex/header.html&quot;;</span><br><span class="line">  fancyindex_header &quot;/theme/layout/header.html&quot;;</span><br><span class="line">  fancyindex_footer &quot;/theme/layout/footer.html&quot;;</span><br><span class="line">  #fancyindex_footer &quot;/fancyindex/footer.html&quot;;</span><br><span class="line">  fancyindex_ignore &quot;fancyindex&quot;; #ignore this directory when showing list</span><br><span class="line"># end include</span><br></pre></td></tr></table></figure>
+<p>把静态文件放到<code>/usr/local/nginx/html</code>目录下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. 1 root root 537 12月 18 2018 50x.html</span><br><span class="line">drwxr-xr-x. 7 root root 105 1月  31 2019 fancyindex/</span><br><span class="line">-rw-r--r--. 1 root root 612 12月 18 2018 index.html</span><br><span class="line">drwxrwxr-x. 5 root root 147 1月  31 2019 theme/</span><br></pre></td></tr></table></figure>
+<p>执行加载命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/bin/nginx -s reload</span><br></pre></td></tr></table></figure></p>
+<p>效果图：<br><img src="/image/nginx使用fancyindex目录索引/downloadfile.png" alt="image"></p>
 
       
     </div>
@@ -414,6 +418,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/26/nginx结合kubernetes实现fancyindex目录索引/" rel="prev" title="nginx结合kubernetes实现fancyindex目录索引">
+                nginx结合kubernetes实现fancyindex目录索引 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -520,7 +528,7 @@ var jiathis_config={
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
