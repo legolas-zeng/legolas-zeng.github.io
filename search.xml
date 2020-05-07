@@ -3,6 +3,43 @@
   
     
     <entry>
+      <title><![CDATA[prometheus operator 监控etcd]]></title>
+      <url>/2020/05/08/prometheus-operator-%E7%9B%91%E6%8E%A7etcd/</url>
+      <content type="html"><![CDATA[<h4 id="创建证书"><a href="#创建证书" class="headerlink" title="创建证书"></a>创建证书</h4><p>监控etcd需要证书验证，我是用二进制运行的etcd，在etcd节点上查看证书的位置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node1 ~]# ps uax|grep etcd</span><br><span class="line">root      1274  1.5  4.7 10818908 192824 ?     Ssl  4月24 301:07 /etc/kubernetes/bin/etcd --name=etcd1 --cert-file=/etc/etcd/ssl/etcd.pem --key-file=/etc/etcd/ssl/etcd-key.pem --peer-cert-file=/etc/etcd/ssl/etcd.pem --peer-key-file=/etc/etcd/ssl/etcd-key.pem --trusted-ca-file=/etc/kubernetes/ssl/ca.pem --peer-trusted-ca-file=/etc/kubernetes/ssl/ca.pem --initial-advertise-peer-urls=https://192.168.3.12:2380 --listen-peer-urls=https://192.168.3.12:2380 --listen-client-urls=https://192.168.3.12:2379,http://127.0.0.1:2379 --advertise-client-urls=https://192.168.3.12:2379 --initial-cluster-token=etcd-cluster-0 --initial-cluster=etcd1=https://192.168.3.12:2380,etcd2=https://192.168.3.13:2380,etcd3=https://192.168.3.15:2380 --initial-cluster-state=new --data-dir=/var/lib/etcd</span><br></pre></td></tr></table></figure>
+<p>将需要的etcd证书保存到secret对象etcd-certs中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n monitoring create secret generic etcd-certs --from-file=/etc/etcd/ssl/etcd.pem --from-file=/etc/etcd/ssl/etcd-key.pem --from-file=/etc/kubernetes/ssl/ca.pem</span><br></pre></td></tr></table></figure>
+<h4 id="修改yaml文件"><a href="#修改yaml文件" class="headerlink" title="修改yaml文件"></a>修改yaml文件</h4><p>修改<code>prometheus-prometheus.yaml</code> ，写入secret</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">....省略若干字....</span><br><span class="line"></span><br><span class="line">podMonitorNamespaceSelector: &#123;&#125;</span><br><span class="line">  podMonitorSelector: &#123;&#125;</span><br><span class="line">  replicas: 2</span><br><span class="line">  secrets:</span><br><span class="line">  - etcd-certs</span><br><span class="line">  resources:</span><br><span class="line">    requests:</span><br><span class="line">      memory: 400Mi</span><br><span class="line">  ruleSelector:</span><br><span class="line">  </span><br><span class="line">....省略若干字....</span><br></pre></td></tr></table></figure>
+<p>创建<code>prometheus-service-etcd.yml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: etcd</span><br><span class="line">  name: etcd-k8s</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: port</span><br><span class="line">    port: 2379</span><br><span class="line">    protocol: TCP</span><br><span class="line">  type: ClusterIP</span><br><span class="line">  clusterIP: None</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Endpoints</span><br><span class="line">metadata:</span><br><span class="line">  name: etcd-k8s</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: etcd</span><br><span class="line">subsets:</span><br><span class="line">- addresses:</span><br><span class="line">  - ip: etcd-node1的ip</span><br><span class="line">    nodeName: etcd1</span><br><span class="line">  - ip: etcd-node2的ip</span><br><span class="line">    nodeName: etcd2</span><br><span class="line">  - ip: etcd-node3的ip</span><br><span class="line">    nodeName: etcd3</span><br><span class="line">  ports:</span><br><span class="line">  - name: port</span><br><span class="line">    port: 2379</span><br><span class="line">    protocol: TCP</span><br></pre></td></tr></table></figure>
+<p>创建<code>prometheus-serviceMonitorEtcd.yml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: monitoring.coreos.com/v1</span><br><span class="line">kind: ServiceMonitor</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: etcd-k8s</span><br><span class="line">  name: etcd-k8s</span><br><span class="line">  namespace: monitoring</span><br><span class="line">spec:</span><br><span class="line">  endpoints:</span><br><span class="line">  - port: port</span><br><span class="line">    interval: 30s</span><br><span class="line">    scheme: https</span><br><span class="line">    #port: https-metrics</span><br><span class="line">    tlsConfig:</span><br><span class="line">      caFile: /etc/prometheus/secrets/etcd-certs/ca.pem</span><br><span class="line">      certFile: /etc/prometheus/secrets/etcd-certs/etcd.pem</span><br><span class="line">      keyFile: /etc/prometheus/secrets/etcd-certs/etcd-key.pem</span><br><span class="line">      insecureSkipVerify: true</span><br><span class="line">  jobLabel: k8s-app</span><br><span class="line">  namespaceSelector:</span><br><span class="line">    matchNames:</span><br><span class="line">    - kube-system</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      k8s-app: etcd</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/05/08/YmOptA.png" alt="image"></p>
+<p>参考链接：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> <a href="https://blog.csdn.net/weixin_41533951/article/details/101264092" target="_blank" rel="noopener">https://blog.csdn.net/weixin_41533951/article/details/101264092</a></li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> kubernetes </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> kubernetes </tag>
+            
+            <tag> prometheus </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[kube-prometheus监控]]></title>
       <url>/2020/05/07/kube-prometheus%E7%9B%91%E6%8E%A7/</url>
       <content type="html"><![CDATA[<p><code>kube-prometheus</code>项目地址<code>https://github.com/coreos/kube-prometheus</code></p>
@@ -70,7 +107,7 @@
       
         <categories>
             
-            <category> 容器 </category>
+            <category> kubernetes </category>
             
         </categories>
         

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="docker," />
+  <meta name="keywords" content="kubernetes,prometheus," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="刚开始用docker的时候就发现centos7容器没办法使用systemctl,service命令提示错误。12[root@slave2 ~]# systemctl stop firewalld.serviceFailed to get D-Bus connection: Operation not permitted 对于这个bug，网上很多人说centos7.2之后会得到处理，实际上我现在使用">
-<meta name="keywords" content="docker">
+<meta name="description" content="创建证书监控etcd需要证书验证，我是用二进制运行的etcd，在etcd节点上查看证书的位置。 12[root@k8s-node1 ~]# ps uax|grep etcdroot      1274  1.5  4.7 10818908 192824 ?     Ssl  4月24 301:07 /etc/kubernetes/bin/etcd --name=etcd1 --cert-file=">
+<meta name="keywords" content="kubernetes,prometheus">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker防坑指南（一）">
-<meta property="og:url" content="http://yoursite.com/2018/03/08/docker防坑指南（一）/index.html">
+<meta property="og:title" content="prometheus operator 监控etcd">
+<meta property="og:url" content="http://yoursite.com/2020/05/08/prometheus-operator-监控etcd/index.html">
 <meta property="og:site_name" content="冻龄大叔">
-<meta property="og:description" content="刚开始用docker的时候就发现centos7容器没办法使用systemctl,service命令提示错误。12[root@slave2 ~]# systemctl stop firewalld.serviceFailed to get D-Bus connection: Operation not permitted 对于这个bug，网上很多人说centos7.2之后会得到处理，实际上我现在使用">
+<meta property="og:description" content="创建证书监控etcd需要证书验证，我是用二进制运行的etcd，在etcd节点上查看证书的位置。 12[root@k8s-node1 ~]# ps uax|grep etcdroot      1274  1.5  4.7 10818908 192824 ?     Ssl  4月24 301:07 /etc/kubernetes/bin/etcd --name=etcd1 --cert-file=">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-13T15:57:48.507Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/08/YmOptA.png">
+<meta property="og:updated_time" content="2020-05-07T16:28:16.359Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="docker防坑指南（一）">
-<meta name="twitter:description" content="刚开始用docker的时候就发现centos7容器没办法使用systemctl,service命令提示错误。12[root@slave2 ~]# systemctl stop firewalld.serviceFailed to get D-Bus connection: Operation not permitted 对于这个bug，网上很多人说centos7.2之后会得到处理，实际上我现在使用">
+<meta name="twitter:title" content="prometheus operator 监控etcd">
+<meta name="twitter:description" content="创建证书监控etcd需要证书验证，我是用二进制运行的etcd，在etcd节点上查看证书的位置。 12[root@k8s-node1 ~]# ps uax|grep etcdroot      1274  1.5  4.7 10818908 192824 ?     Ssl  4月24 301:07 /etc/kubernetes/bin/etcd --name=etcd1 --cert-file=">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/05/08/YmOptA.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/08/docker防坑指南（一）/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/05/08/prometheus-operator-监控etcd/"/>
 
 
 
 
 
-  <title>docker防坑指南（一） | 冻龄大叔</title>
+  <title>prometheus operator 监控etcd | 冻龄大叔</title>
   
 
 
@@ -264,7 +266,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/08/docker防坑指南（一）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/08/prometheus-operator-监控etcd/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Zenganiu">
@@ -281,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">docker防坑指南（一）</h1>
+          <h1 class="post-title" itemprop="name headline">prometheus operator 监控etcd</h1>
         
 
         <div class="post-meta">
@@ -293,8 +295,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T23:02:21+08:00">
-                2018-03-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-08T00:24:02+08:00">
+                2020-05-08
               </time>
             
 
@@ -316,8 +318,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/容器/" itemprop="url" rel="index">
-                    <span itemprop="name">容器</span>
+                  <a href="/categories/kubernetes/" itemprop="url" rel="index">
+                    <span itemprop="name">kubernetes</span>
                   </a>
                 </span>
 
@@ -353,29 +355,21 @@
       
 
       
-        <p>刚开始用docker的时候就发现centos7容器没办法使用<code>systemctl</code>,<code>service</code>命令提示错误。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@slave2 ~]# systemctl stop firewalld.service</span><br><span class="line">Failed to get D-Bus connection: Operation not permitted</span><br></pre></td></tr></table></figure></p>
-<p>对于这个bug，网上很多人说<code>centos7.2</code>之后会得到处理，实际上我现在使用的<code>centos7.3</code>,问题依旧存在，放几个啪啪打脸的有毒连接：</p>
-<p>1、<a href="https://seven.centos.org/2015/12/fixing-centos-7-systemd-conflicts-with-docker/" target="_blank" rel="noopener">Fixing CentOS 7 systemd conflicts with docker</a></p>
-<p>2、<a href="https://bugzilla.redhat.com/show_bug.cgi?id=1033604" target="_blank" rel="noopener">Unable to start systemd service in Docker container</a></p>
-<hr>
-<p>这个BUG报错信息大概意思是<code>未能获得D-Bus连接，不能进行操作</code>，centos7作为全新的系统，摒弃centos6，直接采用<code>systemd</code>作为系统启动和服务器守护进程管理器，新特性之一就是采用socket式与D-Bus总线式激活服务,用非常行外的话说，就是centos7启动服务，需要与内核通讯，且需要D-Bus连接的权限。</p>
-<hr>
-<p>我写这文档的时候只知道两种解决方法：</p>
-<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><p>需要用到<code>docker</code>的特权模式，centos容器作为一个文件系统，只有获取<code>--privileged</code>才能访问linux内核。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~ ᐅ docker run -itd --privileged ansible/centos7-ansible init</span><br><span class="line">a73599408f1a7ba6ff7cd2a73a4f613f7fd3393c021cbdc82c07c9b21134cbb5</span><br><span class="line">~ ᐅ docker exec -it a73599408f1a /bin/bash</span><br><span class="line">[root@a73599408f1a ansible]# systemctl stop firewalld.service</span><br><span class="line">Failed to stop firewalld.service: Unit firewalld.service not loaded.</span><br></pre></td></tr></table></figure>
-<p>ok，这样就没报错了。</p>
-<p>当然也可以这样写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~ ᐅ docker run -d --privileged=true ansible/centos7-ansible /usr/sbin/init </span><br><span class="line">975b6451e07d3edfccc0201e5b35f350cd0bc5321dfaf1e15432bc48bd8b591d</span><br><span class="line">~ ᐅ docker exec -it 975b6451e07d /bin/bash</span><br><span class="line">[root@975b6451e07d ansible]# systemctl stop firewalld.service</span><br><span class="line">Failed to stop firewalld.service: Unit firewalld.service not loaded.</span><br></pre></td></tr></table></figure></p>
-<p>我一直用的docker-compose，所以，docker-compose.yml文件可以这样写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">version : &apos;2&apos;</span><br><span class="line">services :</span><br><span class="line">  centos7 :</span><br><span class="line">    image: 你的镜像</span><br><span class="line">    container_name : xxxx</span><br><span class="line">    privileged : true</span><br><span class="line">    command : init</span><br><span class="line">    .....balabala.....</span><br></pre></td></tr></table></figure></p>
-<p>主要就是加了<code>privileged</code>特权和执行<code>command</code>。</p>
-<p>当然喜欢用<code>dockerfile</code>的可以这样写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FROM centos:7</span><br><span class="line">ENV container docker</span><br><span class="line">RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \</span><br><span class="line">systemd-tmpfiles-setup.service ] || rm -f $i; done); \</span><br><span class="line">rm -f /lib/systemd/system/multi-user.target.wants/*;\</span><br><span class="line">rm -f /etc/systemd/system/*.wants/*;\</span><br><span class="line">rm -f /lib/systemd/system/local-fs.target.wants/*; \</span><br><span class="line">rm -f /lib/systemd/system/sockets.target.wants/*udev*; \</span><br><span class="line">rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \</span><br><span class="line">rm -f /lib/systemd/system/basic.target.wants/*;\</span><br><span class="line">rm -f /lib/systemd/system/anaconda.target.wants/*;</span><br><span class="line">VOLUME [ &quot;/sys/fs/cgroup&quot; ]</span><br><span class="line">CMD [&quot;/usr/sbin/init&quot;]</span><br></pre></td></tr></table></figure></p>
-<p>这是github上的一个<a href="https://github.com/docker-library/docs/blob/master/centos/README.md" target="_blank" rel="noopener">官方例子</a>。</p>
-<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><p>有时间再写….</p>
-<h4 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h4><p><a href="https://developers.redhat.com/blog/2014/05/05/running-systemd-within-docker-container/" target="_blank" rel="noopener">https://developers.redhat.com/blog/2014/05/05/running-systemd-within-docker-container/</a></p>
-<p><code>深入浅析centos7中的systemd</code>:  <a href="https://www.zhangshengrong.com/p/JKN8EgomX6/" target="_blank" rel="noopener">https://www.zhangshengrong.com/p/JKN8EgomX6/</a></p>
-<p><code>centOS7服务管理与启动流程</code>：<a href="https://www.cnblogs.com/duzhaoqi/p/7582404.html" target="_blank" rel="noopener">https://www.cnblogs.com/duzhaoqi/p/7582404.html</a></p>
-<p><code>D-Bus介绍</code>: <a href="http://blog.csdn.net/qq_29729577/article/details/51143260" target="_blank" rel="noopener">http://blog.csdn.net/qq_29729577/article/details/51143260</a></p>
-<p><code>CentOS image documentation</code>:<a href="https://github.com/docker-library/docs/blob/master/centos/README.md" target="_blank" rel="noopener">https://github.com/docker-library/docs/blob/master/centos/README.md</a></p>
-<p><code>D-Bus</code>:一种本地进程间通信机制</p>
+        <h4 id="创建证书"><a href="#创建证书" class="headerlink" title="创建证书"></a>创建证书</h4><p>监控etcd需要证书验证，我是用二进制运行的etcd，在etcd节点上查看证书的位置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-node1 ~]# ps uax|grep etcd</span><br><span class="line">root      1274  1.5  4.7 10818908 192824 ?     Ssl  4月24 301:07 /etc/kubernetes/bin/etcd --name=etcd1 --cert-file=/etc/etcd/ssl/etcd.pem --key-file=/etc/etcd/ssl/etcd-key.pem --peer-cert-file=/etc/etcd/ssl/etcd.pem --peer-key-file=/etc/etcd/ssl/etcd-key.pem --trusted-ca-file=/etc/kubernetes/ssl/ca.pem --peer-trusted-ca-file=/etc/kubernetes/ssl/ca.pem --initial-advertise-peer-urls=https://192.168.3.12:2380 --listen-peer-urls=https://192.168.3.12:2380 --listen-client-urls=https://192.168.3.12:2379,http://127.0.0.1:2379 --advertise-client-urls=https://192.168.3.12:2379 --initial-cluster-token=etcd-cluster-0 --initial-cluster=etcd1=https://192.168.3.12:2380,etcd2=https://192.168.3.13:2380,etcd3=https://192.168.3.15:2380 --initial-cluster-state=new --data-dir=/var/lib/etcd</span><br></pre></td></tr></table></figure>
+<p>将需要的etcd证书保存到secret对象etcd-certs中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n monitoring create secret generic etcd-certs --from-file=/etc/etcd/ssl/etcd.pem --from-file=/etc/etcd/ssl/etcd-key.pem --from-file=/etc/kubernetes/ssl/ca.pem</span><br></pre></td></tr></table></figure>
+<h4 id="修改yaml文件"><a href="#修改yaml文件" class="headerlink" title="修改yaml文件"></a>修改yaml文件</h4><p>修改<code>prometheus-prometheus.yaml</code> ，写入secret</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">....省略若干字....</span><br><span class="line"></span><br><span class="line">podMonitorNamespaceSelector: &#123;&#125;</span><br><span class="line">  podMonitorSelector: &#123;&#125;</span><br><span class="line">  replicas: 2</span><br><span class="line">  secrets:</span><br><span class="line">  - etcd-certs</span><br><span class="line">  resources:</span><br><span class="line">    requests:</span><br><span class="line">      memory: 400Mi</span><br><span class="line">  ruleSelector:</span><br><span class="line">  </span><br><span class="line">....省略若干字....</span><br></pre></td></tr></table></figure>
+<p>创建<code>prometheus-service-etcd.yml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: etcd</span><br><span class="line">  name: etcd-k8s</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">  - name: port</span><br><span class="line">    port: 2379</span><br><span class="line">    protocol: TCP</span><br><span class="line">  type: ClusterIP</span><br><span class="line">  clusterIP: None</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Endpoints</span><br><span class="line">metadata:</span><br><span class="line">  name: etcd-k8s</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: etcd</span><br><span class="line">subsets:</span><br><span class="line">- addresses:</span><br><span class="line">  - ip: etcd-node1的ip</span><br><span class="line">    nodeName: etcd1</span><br><span class="line">  - ip: etcd-node2的ip</span><br><span class="line">    nodeName: etcd2</span><br><span class="line">  - ip: etcd-node3的ip</span><br><span class="line">    nodeName: etcd3</span><br><span class="line">  ports:</span><br><span class="line">  - name: port</span><br><span class="line">    port: 2379</span><br><span class="line">    protocol: TCP</span><br></pre></td></tr></table></figure>
+<p>创建<code>prometheus-serviceMonitorEtcd.yml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: monitoring.coreos.com/v1</span><br><span class="line">kind: ServiceMonitor</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: etcd-k8s</span><br><span class="line">  name: etcd-k8s</span><br><span class="line">  namespace: monitoring</span><br><span class="line">spec:</span><br><span class="line">  endpoints:</span><br><span class="line">  - port: port</span><br><span class="line">    interval: 30s</span><br><span class="line">    scheme: https</span><br><span class="line">    #port: https-metrics</span><br><span class="line">    tlsConfig:</span><br><span class="line">      caFile: /etc/prometheus/secrets/etcd-certs/ca.pem</span><br><span class="line">      certFile: /etc/prometheus/secrets/etcd-certs/etcd.pem</span><br><span class="line">      keyFile: /etc/prometheus/secrets/etcd-certs/etcd-key.pem</span><br><span class="line">      insecureSkipVerify: true</span><br><span class="line">  jobLabel: k8s-app</span><br><span class="line">  namespaceSelector:</span><br><span class="line">    matchNames:</span><br><span class="line">    - kube-system</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      k8s-app: etcd</span><br></pre></td></tr></table></figure>
+<p><img src="https://s1.ax1x.com/2020/05/08/YmOptA.png" alt="image"></p>
+<p>参考链接：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> <a href="https://blog.csdn.net/weixin_41533951/article/details/101264092" target="_blank" rel="noopener">https://blog.csdn.net/weixin_41533951/article/details/101264092</a></li>
+</ul>
 
       
     </div>
@@ -404,7 +398,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/docker/" rel="tag"># docker</a>
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/prometheus/" rel="tag"># prometheus</a>
           
         </div>
       
@@ -417,8 +413,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/27/ansible的api大坑解析/" rel="next" title="ansible的api大坑解析">
-                <i class="fa fa-chevron-left"></i> ansible的api大坑解析
+              <a href="/2020/05/07/kube-prometheus监控/" rel="next" title="kube-prometheus监控">
+                <i class="fa fa-chevron-left"></i> kube-prometheus监控
               </a>
             
           </div>
@@ -426,10 +422,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/08/单机版的tornado-nginx反向代理/" rel="prev" title="单机版的tornado+nginx反向代理">
-                单机版的tornado+nginx反向代理 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -631,7 +623,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法1"><span class="nav-number">1.</span> <span class="nav-text">方法1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法2"><span class="nav-number">2.</span> <span class="nav-text">方法2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考文档"><span class="nav-number">3.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建证书"><span class="nav-number">1.</span> <span class="nav-text">创建证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改yaml文件"><span class="nav-number">2.</span> <span class="nav-text">修改yaml文件</span></a></li></ol></div>
             
 
           </div>
