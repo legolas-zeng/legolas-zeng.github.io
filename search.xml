@@ -3,6 +3,89 @@
   
     
     <entry>
+      <title><![CDATA[kube-prometheus监控]]></title>
+      <url>/2020/05/07/kube-prometheus%E7%9B%91%E6%8E%A7/</url>
+      <content type="html"><![CDATA[<p><code>kube-prometheus</code>项目地址<code>https://github.com/coreos/kube-prometheus</code></p>
+<table>
+<thead>
+<tr>
+<th>kube-prometheus stack</th>
+<th>Kubernetes 1.14</th>
+<th>Kubernetes 1.15</th>
+<th>Kubernetes 1.16</th>
+<th>Kubernetes 1.17</th>
+<th>Kubernetes 1.18</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>release-0.3</code></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>release-0.4</code></td>
+<td>✗</td>
+<td>✗</td>
+<td>✔</td>
+<td>✔</td>
+<td>✗</td>
+</tr>
+<tr>
+<td><code>release-0.5</code></td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><code>HEAD</code></td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✔</td>
+</tr>
+</tbody>
+</table>
+<p>yaml文件路径<code>manifests</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── alertmanager-alertmanager.yaml</span><br><span class="line">├── alertmanager-secret.yaml</span><br><span class="line">├── alertmanager-serviceAccount.yaml</span><br><span class="line">├── alertmanager-serviceMonitor.yaml</span><br><span class="line">├── alertmanager-service.yaml</span><br><span class="line">├── grafana-dashboardDatasources.yaml</span><br><span class="line">├── grafana-dashboardDefinitions.yaml</span><br><span class="line">├── grafana-dashboardSources.yaml</span><br><span class="line">├── grafana-deployment.yaml</span><br><span class="line">├── grafana-serviceAccount.yaml</span><br><span class="line">├── grafana-serviceMonitor.yaml</span><br><span class="line">├── grafana-service.yaml</span><br><span class="line">├── kube-state-metrics-clusterRoleBinding.yaml</span><br><span class="line">├── kube-state-metrics-clusterRole.yaml</span><br><span class="line">├── kube-state-metrics-deployment.yaml</span><br><span class="line">├── kube-state-metrics-serviceAccount.yaml</span><br><span class="line">├── kube-state-metrics-serviceMonitor.yaml</span><br><span class="line">├── kube-state-metrics-service.yaml</span><br><span class="line">├── node-exporter-clusterRoleBinding.yaml</span><br><span class="line">├── node-exporter-clusterRole.yaml</span><br><span class="line">├── node-exporter-daemonset.yaml</span><br><span class="line">├── node-exporter-serviceAccount.yaml</span><br><span class="line">├── node-exporter-serviceMonitor.yaml</span><br><span class="line">├── node-exporter-service.yaml</span><br><span class="line">├── prometheus-adapter-apiService.yaml</span><br><span class="line">├── prometheus-adapter-clusterRoleAggregatedMetricsReader.yaml</span><br><span class="line">├── prometheus-adapter-clusterRoleBindingDelegator.yaml</span><br><span class="line">├── prometheus-adapter-clusterRoleBinding.yaml</span><br><span class="line">├── prometheus-adapter-clusterRoleServerResources.yaml</span><br><span class="line">├── prometheus-adapter-clusterRole.yaml</span><br><span class="line">├── prometheus-adapter-configMap.yaml</span><br><span class="line">├── prometheus-adapter-deployment.yaml</span><br><span class="line">├── prometheus-adapter-roleBindingAuthReader.yaml</span><br><span class="line">├── prometheus-adapter-serviceAccount.yaml</span><br><span class="line">├── prometheus-adapter-service.yaml</span><br><span class="line">├── prometheus-clusterRoleBinding.yaml</span><br><span class="line">├── prometheus-clusterRole.yaml</span><br><span class="line">├── prometheus-operator-serviceMonitor.yaml</span><br><span class="line">├── prometheus-prometheus.yaml</span><br><span class="line">├── prometheus-roleBindingConfig.yaml</span><br><span class="line">├── prometheus-roleBindingSpecificNamespaces.yaml</span><br><span class="line">├── prometheus-roleConfig.yaml</span><br><span class="line">├── prometheus-roleSpecificNamespaces.yaml</span><br><span class="line">├── prometheus-rules.yaml</span><br><span class="line">├── prometheus-serviceAccount.yaml</span><br><span class="line">├── prometheus-serviceMonitorApiserver.yaml</span><br><span class="line">├── prometheus-serviceMonitorCoreDNS.yaml</span><br><span class="line">├── prometheus-serviceMonitorKubeControllerManager.yaml</span><br><span class="line">├── prometheus-serviceMonitorKubelet.yaml</span><br><span class="line">├── prometheus-serviceMonitorKubeScheduler.yaml</span><br><span class="line">├── prometheus-serviceMonitor.yaml</span><br><span class="line">├── prometheus-service.yaml</span><br><span class="line">└── setup</span><br><span class="line">    ├── 0namespace-namespace.yaml</span><br><span class="line">    ├── prometheus-operator-0alertmanagerCustomResourceDefinition.yaml</span><br><span class="line">    ├── prometheus-operator-0podmonitorCustomResourceDefinition.yaml</span><br><span class="line">    ├── prometheus-operator-0prometheusCustomResourceDefinition.yaml</span><br><span class="line">    ├── prometheus-operator-0prometheusruleCustomResourceDefinition.yaml</span><br><span class="line">    ├── prometheus-operator-0servicemonitorCustomResourceDefinition.yaml</span><br><span class="line">    ├── prometheus-operator-0thanosrulerCustomResourceDefinition.yaml</span><br><span class="line">    ├── prometheus-operator-clusterRoleBinding.yaml</span><br><span class="line">    ├── prometheus-operator-clusterRole.yaml</span><br><span class="line">    ├── prometheus-operator-deployment.yaml</span><br><span class="line">    ├── prometheus-operator-serviceAccount.yaml</span><br><span class="line">    └── prometheus-operator-service.yaml</span><br></pre></td></tr></table></figure></p>
+<h4 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h4><h5 id="修改prometheus-serviceMonitorKubelet-yaml中的port"><a href="#修改prometheus-serviceMonitorKubelet-yaml中的port" class="headerlink" title="修改prometheus-serviceMonitorKubelet.yaml中的port"></a><code>修改prometheus-serviceMonitorKubelet.yaml中的port</code></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#port: https-metrics 改成 http</span><br><span class="line">port: http-metrics</span><br><span class="line">relabelings:</span><br><span class="line">- sourceLabels:</span><br><span class="line">  - __metrics_path__</span><br><span class="line">  targetLabel: metrics_path</span><br><span class="line">#scheme: https 改成 http</span><br><span class="line">scheme: http</span><br><span class="line">....省略若干字....</span><br><span class="line">#port: https-metrics</span><br><span class="line">port: http-metrics</span><br><span class="line">relabelings:</span><br><span class="line">- sourceLabels:</span><br><span class="line">  - __metrics_path__</span><br><span class="line">  targetLabel: metrics_path</span><br><span class="line">#scheme: https</span><br><span class="line">scheme: http</span><br></pre></td></tr></table></figure>
+<h5 id="修改alertmanager-service-yaml-添加nodeport"><a href="#修改alertmanager-service-yaml-添加nodeport" class="headerlink" title="修改alertmanager-service.yaml,添加nodeport"></a><code>修改alertmanager-service.yaml,添加nodeport</code></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">....省略若干字....</span><br><span class="line">  ports:</span><br><span class="line">  - name: web</span><br><span class="line">    port: 9093</span><br><span class="line">    targetPort: web</span><br><span class="line">    nodePort: 30093 # 添加的nodeport</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    alertmanager: main</span><br><span class="line">    app: alertmanager</span><br><span class="line">  sessionAffinity: ClientIP</span><br></pre></td></tr></table></figure>
+<h5 id="修改grafana-service-yaml，添加nodeport"><a href="#修改grafana-service-yaml，添加nodeport" class="headerlink" title="修改grafana-service.yaml，添加nodeport"></a><code>修改grafana-service.yaml，添加nodeport</code></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">....省略若干字....</span><br><span class="line">  ports:</span><br><span class="line">  - name: http</span><br><span class="line">    port: 3000</span><br><span class="line">    targetPort: http</span><br><span class="line">    nodePort: 32000</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: grafana</span><br></pre></td></tr></table></figure>
+<h5 id="修改prometheus-service-yaml-添加nodeport"><a href="#修改prometheus-service-yaml-添加nodeport" class="headerlink" title="修改prometheus-service.yaml,添加nodeport"></a><code>修改prometheus-service.yaml,添加nodeport</code></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">....省略若干字....</span><br><span class="line">  ports:</span><br><span class="line">  - name: web</span><br><span class="line">    port: 9090</span><br><span class="line">    targetPort: web</span><br><span class="line">    nodePort: 30090</span><br><span class="line">  type: NodePort</span><br><span class="line">  selector:</span><br><span class="line">    app: prometheus</span><br><span class="line">    prometheus: k8s</span><br><span class="line">  sessionAffinity: ClientIP</span><br></pre></td></tr></table></figure>
+<h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd manifests</span><br><span class="line">kubectl apply -f ./setip</span><br><span class="line">kubectl apply -f ./</span><br></pre></td></tr></table></figure>
+<p>然后打开<code>你的node节点ip:30090</code>就可以看到prometheus界面。</p>
+<p>参考链接：</p>
+<ul>
+<li style="list-style: none"><input type="checkbox" checked> <a href="https://www.jianshu.com/p/2fbbe767870d" target="_blank" rel="noopener">https://www.jianshu.com/p/2fbbe767870d</a></li>
+<li style="list-style: none"><input type="checkbox" checked> <a href="https://github.com/coreos/kube-prometheus" target="_blank" rel="noopener">https://github.com/coreos/kube-prometheus</a></li>
+<li style="list-style: none"><input type="checkbox" checked> 修改镜像地址的yaml文件：<a href="https://gitee.com/mylanvv/kube-prometheus.git" target="_blank" rel="noopener">https://gitee.com/mylanvv/kube-prometheus.git</a></li>
+<li style="list-style: none"><input type="checkbox" checked> <a href="https://blog.csdn.net/qq_40460909/article/details/105540145" target="_blank" rel="noopener">https://blog.csdn.net/qq_40460909/article/details/105540145</a></li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> 容器 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> kubernetes </tag>
+            
+            <tag> prometheus </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[nginx结合kubernetes实现fancyindex目录索引]]></title>
       <url>/2020/02/26/nginx%E7%BB%93%E5%90%88kubernetes%E5%AE%9E%E7%8E%B0fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/</url>
       <content type="html"><![CDATA[<p>根据上一篇<a href="http://zenganiu.xyz/2020/02/26/nginx%E4%BD%BF%E7%94%A8fancyindex%E7%9B%AE%E5%BD%95%E7%B4%A2%E5%BC%95/" target="_blank" rel="noopener">nginx使用fancyindex目录索引</a>，部署到kubernetes1.16。</p>
@@ -289,9 +372,9 @@
         
         <tags>
             
-            <tag> 运维 </tag>
-            
             <tag> python </tag>
+            
+            <tag> 运维 </tag>
             
             <tag> 爬虫 </tag>
             
@@ -898,9 +981,9 @@
         
         <tags>
             
-            <tag> ansible </tag>
-            
             <tag> 运维 </tag>
+            
+            <tag> ansible </tag>
             
         </tags>
         
